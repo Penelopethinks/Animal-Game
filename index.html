@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Endless Pet Universe</title>
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#edf4e8,#101b19);--panel:light-dark(#fffdf3,#1a2924);--panel2:light-dark(#e4edda,#263a30);--text:light-dark(#26382b,#eff7e9);--muted:light-dark(#6d806f,#b2c8b1);--line:light-dark(#d2dfc8,#3c5545);--purple:#6b9b53;--pink:#e8b2ce;--mint:#75d8bf;--yellow:#ffd878;--shadow:0 12px 35px #1c39201c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif}button,input{font:inherit}button{cursor:pointer;border:0;transition:transform .15s,filter .15s}button:hover{filter:brightness(1.04);transform:translateY(-1px)}button:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}.app{min-height:100vh;background:var(--bg)}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px clamp(16px,4vw,48px);border-bottom:1px solid var(--line);background:var(--panel)}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:16px;background:linear-gradient(145deg,#a58cff,#f7a2c9);display:grid;place-items:center;font-size:25px;box-shadow:0 6px 15px #9a7bea40}.brand h1{font-size:clamp(17px,2.5vw,23px);margin:0;letter-spacing:-.7px}.brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}.top-actions{display:flex;align-items:center;gap:9px}.pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-size:13px;font-weight:800;white-space:nowrap}.coin{color:#b57a00}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);max-width:1500px;margin:auto;gap:24px;padding:24px clamp(14px,3vw,38px)}.sidebar{display:flex;flex-direction:column;gap:8px}.navbtn{display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border-radius:15px;color:var(--muted);background:transparent;font-weight:800}.navbtn .navicon{font-size:21px;width:27px;text-align:center}.navbtn.active{background:linear-gradient(100deg,#8b75ed22,#f58bb71b);color:var(--text);box-shadow:inset 3px 0 var(--purple)}.side-note{margin-top:20px;padding:16px;border-radius:18px;background:linear-gradient(150deg,#e7e2ff,#ffe5f0);color:#443b76}.side-note strong{display:block;font-size:14px;margin-bottom:6px}.side-note p{font-size:12px;line-height:1.5;margin:0}.main{min-width:0}.page{display:none;animation:fade .22s ease}.page.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}.welcome{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 28px;border-radius:24px;background:linear-gradient(115deg,#e3e5ff,#ffe4f0 65%,#fff1c9);color:#34365d;overflow:hidden;position:relative}.welcome:after{content:'✦';position:absolute;font-size:150px;color:#fff8;right:22%;top:-58px;transform:rotate(20deg);pointer-events:none}.welcome h2{font-size:clamp(24px,3vw,34px);margin:0 0 8px;letter-spacing:-1.2px}.welcome p{max-width:510px;line-height:1.5;margin:0;color:#67668c}.hero-pet{font-size:clamp(70px,10vw,118px);filter:drop-shadow(0 10px 4px #6c55852c);z-index:1;animation:bob 3s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-8px) rotate(3deg)}}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:26px 0 14px}.section-head h3{margin:0;font-size:19px;letter-spacing:-.4px}.section-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.btn{padding:11px 16px;border-radius:13px;background:var(--purple);color:white;font-weight:900;box-shadow:0 5px 12px #8065e82c}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.pink{background:#f18ab7;color:#53294b}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;box-shadow:var(--shadow)}.stat .ico{font-size:22px}.stat strong{display:block;font-size:24px;margin-top:6px}.stat span{font-size:12px;color:var(--muted)}.pet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:13px}.pet-card{position:relative;text-align:left;background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:15px;color:var(--text);box-shadow:var(--shadow);overflow:hidden}.pet-card.selected{outline:2px solid var(--purple);border-color:var(--purple)}.pet-art{height:104px;border-radius:14px;display:grid;place-items:center;font-size:64px;background:linear-gradient(145deg,var(--petbg,#e4e2ff),#fff7);margin-bottom:12px;position:relative}.pet-art:after{content:'✦';position:absolute;right:12px;top:8px;color:#fff;font-size:19px;text-shadow:0 2px 8px #9885bb}.pet-card strong{display:block;font-size:14px}.pet-card small{display:block;color:var(--muted);margin-top:4px}.rarity{display:inline-block;margin-top:9px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;background:#e9e4ff;color:#6b51bd}.rarity.Rare{background:#dff5ff;color:#18799b}.rarity.Epic{background:#ffe3f2;color:#b44183}.rarity.Legendary{background:#fff0bf;color:#9d6900}.empty{padding:38px 20px;text-align:center;border:1px dashed var(--line);border-radius:20px;color:var(--muted)}.empty .big{font-size:52px;margin-bottom:8px}.hatch-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:18px}.egg-stage{min-height:355px;border-radius:24px;background:radial-gradient(circle at 50% 36%,#fff9df,#f4eaff 48%,#e0e9ff);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#46416e;position:relative;overflow:hidden}.egg-stage:before,.egg-stage:after{content:'✦';position:absolute;color:#fff;font-size:27px;animation:twinkle 2s infinite}.egg-stage:before{left:17%;top:19%}.egg-stage:after{right:18%;top:28%;animation-delay:.8s}@keyframes twinkle{50%{opacity:.3;transform:scale(.7)}}.egg{font-size:118px;filter:drop-shadow(0 14px 8px #6b5e8733);animation:eggBob 2s ease-in-out infinite}.egg.shake{animation:shake .6s ease-in-out 2}@keyframes eggBob{50%{transform:translateY(-7px) rotate(2deg)}}@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-12deg) scale(1.04)}40%{transform:rotate(12deg)}60%{transform:rotate(-9deg)}80%{transform:rotate(8deg)}}.egg-stage h2{margin:8px 0 5px;font-size:25px}.egg-stage p{margin:0 0 18px;color:#78729a;font-size:13px}.egg-info{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px}.egg-info h3{margin:0 0 7px}.egg-info p{font-size:13px;line-height:1.6;color:var(--muted)}.odds{display:flex;flex-direction:column;gap:8px;margin:17px 0}.odds div{display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:9px 11px;border-radius:10px;background:var(--panel2)}.odds b{color:var(--muted)}.full{width:100%;padding:13px}.result{margin-top:14px;padding:15px;border-radius:16px;background:var(--panel2);text-align:center;display:none}.result.show{display:block;animation:fade .25s}.result .creature{font-size:56px}.result strong{display:block;font-size:18px}.result p{margin:4px 0 0}.build-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.build-controls{display:flex;gap:8px;flex-wrap:wrap}.select{background:var(--panel);color:var(--text);border:1px solid var(--line);padding:10px 12px;border-radius:12px;max-width:100%}.builder{display:grid;grid-template-columns:minmax(0,1fr) 225px;gap:14px;margin-top:16px}.world-wrap{min-width:0;background:var(--panel);border:1px solid var(--line);padding:12px;border-radius:20px}.world-banner{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:2px 3px 12px;font-size:12px;color:var(--muted)}.world-grid{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;aspect-ratio:1.25;background:#c9d9c9;padding:5px;border-radius:12px;overflow:hidden}.tile{min-width:0;min-height:0;aspect-ratio:1;border-radius:5px;position:relative;display:grid;place-items:center;font-size:clamp(12px,2vw,24px);padding:0;border:1px solid #0000000a;box-shadow:inset 0 -3px #0000000b;overflow:hidden}.tile:hover{outline:2px solid #fff;z-index:2}.tile .deco{filter:drop-shadow(0 2px 1px #0002);line-height:1}.build-panel{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:14px;min-width:0}.build-panel h3{font-size:14px;margin:2px 0 10px}.categories{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:13px}.cat{font-size:11px;padding:7px 8px;border-radius:9px;background:var(--panel2);color:var(--muted);font-weight:800}.cat.active{background:#e8e1ff;color:#644ab8}.item-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;max-height:390px;overflow:auto;padding:2px}.build-item{border:1px solid var(--line);background:var(--panel2);border-radius:10px;min-width:0;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--text)}.build-item.active{border:2px solid var(--purple);background:#eee9ff}.build-item span{font-size:22px}.build-item small{font-size:9px;text-align:center;line-height:1.1;padding:0 2px}.hint{font-size:11px;line-height:1.5;color:var(--muted);margin:12px 1px 2px}.world-hero{display:flex;align-items:center;gap:14px;padding:16px;background:var(--panel2);border-radius:17px;margin-top:13px}.world-hero .avatar{font-size:44px}.world-hero strong{display:block}.world-hero span{font-size:12px;color:var(--muted)}.world-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.discover-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}.biome-card{background:var(--panel);border:1px solid var(--line);border-radius:19px;padding:16px;box-shadow:var(--shadow)}.biome-art{height:115px;border-radius:14px;display:grid;place-items:center;font-size:55px;margin-bottom:12px}.biome-card h3{margin:0 0 5px;font-size:15px}.biome-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.biome-card .btn{margin-top:13px;width:100%;font-size:12px;padding:10px}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#292844;color:white;padding:12px 18px;border-radius:14px;box-shadow:0 8px 30px #0003;z-index:10;font-size:13px;font-weight:800;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}.mobile-nav{display:none}.footer-note{text-align:center;color:var(--muted);font-size:11px;margin:26px 0 10px}
+@media(max-width:850px){.layout{grid-template-columns:1fr;padding-top:15px}.sidebar{display:none}.mobile-nav{display:flex;gap:5px;overflow-x:auto;padding:8px 12px;background:var(--panel);border-bottom:1px solid var(--line)}.mobile-nav .navbtn{white-space:nowrap;padding:10px 12px;font-size:12px}.mobile-nav .navicon{width:auto}.hatch-layout{grid-template-columns:1fr}.egg-stage{min-height:290px}.builder{grid-template-columns:1fr}.build-panel{order:2}.world-grid{aspect-ratio:1.25}.item-list{grid-template-columns:repeat(6,minmax(0,1fr));max-height:220px}.build-item span{font-size:19px}.build-item small{font-size:8px}}
+@media(max-width:500px){.topbar{padding:12px}.brand p{display:none}.logo{width:40px;height:40px}.pill{padding:8px 10px;font-size:11px}.layout{padding:12px}.welcome{padding:20px}.welcome p{font-size:12px}.hero-pet{font-size:66px}.stats{gap:7px}.stat{padding:10px}.stat strong{font-size:20px}.stat span{font-size:10px}.pet-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pet-art{height:85px;font-size:55px}.world-grid{gap:2px;padding:3px}.tile{border-radius:3px}.item-list{grid-template-columns:repeat(5,minmax(0,1fr))}}
+/* Magical voxel sandbox makeover: earthy colors, block edges, richer world canvas. */
+.welcome{background:linear-gradient(115deg,#d9edc9,#b7dba8 55%,#f5e5b6);color:#263f2d;border:1px solid #a8ca96;box-shadow:inset 0 -7px #6a995322}
+.welcome p{color:#4f7053}
+.world-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:2px;aspect-ratio:1.35;background:#6c9e57;padding:7px;border-radius:8px;box-shadow:inset 0 0 0 3px #ffffff38,inset 0 -12px #294d2d22;background-image:linear-gradient(135deg,#ffffff12 25%,transparent 25%,transparent 50%,#00000008 50%,#00000008 75%,transparent 75%);background-size:28px 28px}
+.tile{border-radius:2px;border:1px solid #243d2633;box-shadow:inset 0 -5px #00000020,inset 0 2px #ffffff20;image-rendering:pixelated}
+.tile:hover{filter:brightness(1.15)}
+.tile .deco{filter:drop-shadow(0 2px 1px #0005)}
+.world-wrap{background:linear-gradient(180deg,var(--panel),var(--panel2));border-color:#73966b}
+.build-panel{border-color:#73966b}
+.btn{background:#4e8b45;box-shadow:0 5px 12px #365f322c}
+.navbtn.active{box-shadow:inset 3px 0 #6b9b53;background:linear-gradient(100deg,#8dbb722b,#b8dca51b)}
+/* IMMERSIVE REALM MODE: the world becomes the whole screen, not a dashboard card. */
+html,body{min-height:100%;}
+.app.immersive{height:100vh;min-height:100vh;overflow:hidden;background:#091426}
+.app.immersive .topbar,.app.immersive .mobile-nav,.app.immersive .sidebar{display:none!important}
+.app.immersive .layout{display:block;width:100%;max-width:none;height:100vh;margin:0;padding:0;gap:0}
+.app.immersive .main{height:100vh;width:100%;}
+.app.immersive #build{display:block!important;position:fixed;inset:0;z-index:20;height:100vh;overflow:hidden;background:linear-gradient(#182e57 0%,#5b85b4 43%,#f5c8b0 72%,#416e4c 100%);}
+.app.immersive #build:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 76% 17%,#fff4c9 0 2%,#ffe6a555 3%,transparent 14%),radial-gradient(ellipse at 15% 20%,#c9eaff33,transparent 22%),linear-gradient(180deg,#07142b33,transparent 35%,#15351a55 100%);z-index:0}
+.app.immersive #build:after{content:"✦　　·　✧　　　✦　　　　·　　✧　　　✦　　·　　　✧";position:absolute;inset:7% 0 auto 0;text-align:center;letter-spacing:2.1vw;font-size:clamp(13px,2vw,26px);color:#fff7d7;opacity:.9;text-shadow:0 0 18px #bceaff;pointer-events:none;animation:magicDrift 8s ease-in-out infinite;z-index:1}
+@keyframes magicDrift{50%{transform:translateY(12px);opacity:.55}}
+.app.immersive .build-top{position:absolute;z-index:5;left:18px;top:16px;right:18px;align-items:flex-start;pointer-events:none}
+.app.immersive .build-top>*{pointer-events:auto}
+.app.immersive .build-top .section-head{padding:13px 17px;border:1px solid #ffffff45;border-radius:18px;background:#10223dcc;backdrop-filter:blur(14px);color:#fff;box-shadow:0 8px 30px #06122555}
+.app.immersive .build-top .section-head h3{font-size:20px;text-shadow:0 2px 12px #0006}
+.app.immersive .build-top .section-head p{color:#d4e8ff}
+.app.immersive .build-controls{padding:8px;border:1px solid #ffffff45;border-radius:16px;background:#10223dcc;backdrop-filter:blur(14px)}
+.app.immersive .select{background:#182d45;color:white;border-color:#8bb7d6}
+.app.immersive .world-hero{position:absolute;z-index:5;left:18px;top:100px;max-width:min(360px,calc(100vw - 36px));padding:10px 15px;border:1px solid #ffffff48;background:#122842b8;color:white;backdrop-filter:blur(12px);box-shadow:0 8px 25px #07142644}
+.app.immersive .world-hero span{color:#d2e8ed}
+.app.immersive .world-hero .avatar{filter:drop-shadow(0 0 12px #fff8);animation:bob 3s ease-in-out infinite}
+.app.immersive .builder{position:absolute;inset:0;margin:0;display:block;}
+.app.immersive .world-wrap{position:absolute;inset:0;padding:0;border:0;border-radius:0;background:transparent;overflow:hidden}
+.app.immersive .world-banner{position:absolute;z-index:4;left:18px;bottom:20px;margin:0;padding:11px 15px;border-radius:14px;background:#10223dcc;border:1px solid #ffffff45;color:#fff;backdrop-filter:blur(12px);font-size:13px}
+.app.immersive .world-banner span:last-child{color:#d9edff}
+.app.immersive .world-grid{position:absolute;inset:0;width:100%;height:100%;padding:0;gap:0;border:0;border-radius:0;aspect-ratio:auto;grid-template-columns:repeat(16,minmax(0,1fr));grid-template-rows:repeat(10,minmax(0,1fr));overflow:hidden;background:transparent!important;background-image:linear-gradient(180deg,transparent 0%,#a3d5b122 48%,#1c5a3a22 100%)!important;box-shadow:none}
+.app.immersive .tile{aspect-ratio:auto;border-radius:0;border:0;position:relative;overflow:visible;background:transparent!important;box-shadow:none;isolation:isolate;font-size:clamp(19px,3.1vw,48px);transition:background .2s,filter .2s}
+.app.immersive .tile:nth-child(n+113){background:linear-gradient(180deg,#78ad5b 0%,#39784a 72%,#245437 100%)!important;border-top:4px solid #b4df7d;box-shadow:inset 0 -12px #183d2b66,inset 0 3px #e0f8a755}
+.app.immersive .tile:nth-child(n+129){background:linear-gradient(180deg,#57914b,#28583c)!important}
+.app.immersive .tile:nth-child(-n+32){background:transparent!important}
+.app.immersive .tile:hover{outline:2px solid #fff9;background:#ffffff16!important;z-index:3}
+.app.immersive .tile .deco{filter:drop-shadow(0 6px 5px #071b1c99);transform-origin:center bottom;animation:worldItemBob 4s ease-in-out infinite}
+@keyframes worldItemBob{50%{translate:0 -4px}}
+.app.immersive .world-actions{position:absolute;z-index:6;bottom:17px;left:50%;transform:translateX(-50%);margin:0;padding:8px;gap:6px;border-radius:18px;border:1px solid #ffffff48;background:#10223dcc;backdrop-filter:blur(14px);white-space:nowrap}
+.app.immersive .world-actions .btn{padding:10px 12px;font-size:12px;background:#264d61;color:#fff;border:1px solid #a3d9e855}
+.app.immersive .build-panel{position:absolute;z-index:7;right:16px;top:100px;bottom:76px;width:270px;display:flex;flex-direction:column;overflow:hidden;border:1px solid #ffffff55;border-radius:22px;background:#10223dd9;color:white;box-shadow:0 14px 45px #07142666;backdrop-filter:blur(16px)}
+.app.immersive .build-panel h3{font-size:15px;margin:4px 0 12px}
+.app.immersive .categories{flex-shrink:0}
+.app.immersive .cat{background:#29445a;color:#d9ebf7}
+.app.immersive .cat.active{background:#f7dc91;color:#44391e}
+.app.immersive .item-list{grid-template-columns:repeat(4,minmax(0,1fr));max-height:none;flex:1;align-content:start}
+.app.immersive .build-item{background:#1c354c;border-color:#55728a;color:#fff;aspect-ratio:1}
+.app.immersive .build-item.active{border:2px solid #ffe7a0;background:#4c5770;box-shadow:0 0 15px #ffe7a044}
+.app.immersive .hint{color:#c2d8e9}
+.app.immersive .btn{background:linear-gradient(135deg,#7c68c8,#4e9c99);box-shadow:0 5px 18px #06122566}
+.app.immersive .btn.secondary{background:#29445a;color:white;border-color:#6c8ba0}
+.app.immersive .toast{z-index:50}
+@media(max-width:700px){.app.immersive .build-top{left:9px;right:9px;top:8px;gap:7px}.app.immersive .build-top .section-head{padding:9px 11px}.app.immersive .build-top .section-head h3{font-size:15px}.app.immersive .build-top .section-head p{display:none}.app.immersive .build-controls{padding:5px;gap:4px}.app.immersive .build-controls .btn{padding:8px;font-size:11px}.app.immersive .world-hero{left:9px;top:62px;padding:7px 10px}.app.immersive .world-hero .avatar{font-size:29px}.app.immersive .world-hero .btn{display:none}.app.immersive .build-panel{top:auto;left:8px;right:8px;bottom:61px;width:auto;height:170px;padding:9px;border-radius:17px}.app.immersive .build-panel h3{display:none}.app.immersive .categories{margin-bottom:6px;flex-wrap:nowrap;overflow-x:auto}.app.immersive .cat{white-space:nowrap;padding:6px 8px}.app.immersive .item-list{grid-template-columns:repeat(8,minmax(0,1fr));overflow-x:hidden;overflow-y:auto}.app.immersive .build-item span{font-size:19px}.app.immersive .build-item small{font-size:8px}.app.immersive .world-actions{left:auto;right:8px;bottom:241px;transform:none;padding:5px}.app.immersive .world-actions .btn{padding:7px;font-size:10px}.app.immersive .world-banner{left:8px;bottom:241px;padding:7px 9px;font-size:10px}.app.immersive .world-grid{grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:repeat(14,minmax(0,1fr))}}
+/* QUIETER STORYBOOK REALM: fewer overlays, a scenic horizon, and a compact tool tray. */
+.app.immersive #build{background:linear-gradient(180deg,#172e56 0%,#456d9b 29%,#a6c5d0 55%,#f3d9b6 70%,#6d9a58 100%)}
+.app.immersive #build:before{background:radial-gradient(circle at 76% 19%,#fff1bd 0 2.1%,#ffe7a855 2.5%,#ffe7a822 7%,transparent 13%),radial-gradient(ellipse at 12% 78%,#476e7a 0 10%,transparent 10.5%),radial-gradient(ellipse at 28% 81%,#557d78 0 14%,transparent 14.5%),radial-gradient(ellipse at 48% 79%,#759d7c 0 12%,transparent 12.5%),radial-gradient(ellipse at 88% 79%,#456e68 0 17%,transparent 17.5%),linear-gradient(180deg,#0d1e3b12 0%,transparent 52%,#274c2d22 100%)}
+.app.immersive #build:after{content:"✧　　　　　　✦　　　　　　　　　✧";inset:10% 0 auto;text-align:center;letter-spacing:1.5vw;font-size:clamp(12px,1.5vw,20px);opacity:.55;animation:magicDrift 11s ease-in-out infinite}
+.app.immersive .build-top{left:22px;top:20px;right:22px;align-items:center}
+.app.immersive .build-top .section-head{padding:10px 14px;border-radius:15px;background:#162a3b99;border-color:#ffffff35;box-shadow:0 5px 18px #0a1b2b20}
+.app.immersive .build-top .section-head h3{font-size:17px;font-weight:750}
+.app.immersive .build-top .section-head p{display:none}
+.app.immersive .build-controls{padding:5px;gap:5px;border-radius:13px;background:#162a3b88;border-color:#ffffff2a}
+.app.immersive .build-controls .btn{padding:8px 11px;font-size:11px;box-shadow:none;background:#e9f0e7;color:#34533c;border:0}
+.app.immersive .build-controls .btn.secondary{background:#263e4c;color:#f7f4e8;border:1px solid #ffffff28}
+.app.immersive .world-hero{display:none!important}
+.app.immersive .builder{inset:0}
+.app.immersive .world-wrap{background:transparent}
+.app.immersive .world-banner{display:none}
+.app.immersive .world-grid{grid-template-columns:repeat(16,minmax(0,1fr));grid-template-rows:repeat(10,minmax(0,1fr));background:transparent!important}
+.app.immersive .tile:nth-child(n+113){border-top:3px solid #b7d987;box-shadow:inset 0 -8px #183d2b30,inset 0 2px #e0f8a744}
+.app.immersive .tile:nth-child(n+129){background:linear-gradient(180deg,#5c914b,#315d3a)!important}
+.app.immersive .tile .deco{filter:drop-shadow(0 5px 4px #19352566);animation:worldItemBob 5s ease-in-out infinite}
+.app.immersive .build-panel{top:auto;left:50%;right:auto;bottom:18px;transform:translateX(-50%);width:min(660px,calc(100vw - 36px));height:auto;max-height:175px;padding:10px 13px 12px;border-radius:18px;background:#f5f1dfed;color:#344b39;border:1px solid #ffffffb0;box-shadow:0 8px 30px #122e2940;backdrop-filter:blur(12px)}
+.app.immersive .build-panel h3{margin:0 0 7px;font-size:12px;color:#45664a}
+.app.immersive .build-panel .hint{display:none}
+.app.immersive .categories{flex-wrap:nowrap;overflow-x:auto;margin:0 0 7px;gap:5px;scrollbar-width:none}
+.app.immersive .cat{flex:0 0 auto;padding:6px 9px;background:#e2e8d7;color:#64785e;font-size:10px}
+.app.immersive .cat.active{background:#476f49;color:white}
+.app.immersive .item-list{display:flex;flex-wrap:nowrap;gap:7px;overflow-x:auto;overflow-y:hidden;max-height:none;flex:0 0 auto;padding:2px 1px 5px;scrollbar-width:thin}
+.app.immersive .build-item{flex:0 0 54px;width:54px;aspect-ratio:1;background:#fffdf3;color:#405641;border:1px solid #d7dfca;border-radius:12px;box-shadow:0 2px 5px #203b2010}
+.app.immersive .build-item span{font-size:23px}
+.app.immersive .build-item small{font-size:8px;color:#64785e}
+.app.immersive .build-item.active{border:2px solid #8aaa68;background:#e8f1d9;box-shadow:0 0 0 2px #d3e3bd}
+.app.immersive .world-actions{left:auto;right:22px;bottom:24px;transform:none;padding:0;border:0;background:transparent;backdrop-filter:none}
+.app.immersive .world-actions .btn{padding:8px 11px;font-size:11px;background:#f5f1dfed;color:#34533c;border:1px solid #ffffffb0;box-shadow:0 4px 15px #122e2922}
+.app.immersive .world-actions .btn:nth-child(n+3){display:none}
+@media(max-width:700px){.app.immersive .build-top{left:9px;right:9px;top:9px;gap:6px}.app.immersive .build-top .section-head{padding:8px 10px}.app.immersive .build-top .section-head h3{font-size:13px}.app.immersive .build-controls .btn{padding:7px 8px;font-size:10px}.app.immersive .build-panel{left:8px;right:8px;bottom:8px;transform:none;width:auto;max-height:155px;padding:8px 9px 9px}.app.immersive .build-panel h3{display:none}.app.immersive .categories{margin-bottom:5px}.app.immersive .cat{padding:5px 8px}.app.immersive .build-item{flex-basis:47px;width:47px}.app.immersive .build-item span{font-size:20px}.app.immersive .world-actions{right:9px;bottom:175px;gap:4px}.app.immersive .world-actions .btn{padding:7px 8px;font-size:10px}.app.immersive .world-grid{grid-template-columns:repeat(12,minmax(0,1fr));grid-template-rows:repeat(14,minmax(0,1fr))}}
+/* More restrained, mature palette and solid voxel blocks. */
+.app.immersive #build{background:linear-gradient(180deg,#172a3c 0%,#6b8a9a 36%,#c5c9b8 61%,#d7c6a5 72%,#5d8050 100%)}
+.app.immersive #build:after{display:none;content:none}
+.app.immersive .build-top .section-head,.app.immersive .build-controls{background:#182831df;border-color:#ffffff25;box-shadow:0 5px 18px #0a1b2b28}
+.app.immersive .build-top .section-head h3{font-family:Inter,system-ui,sans-serif;font-size:16px;letter-spacing:.1px}
+.app.immersive .build-panel{background:#17262aee;color:#edf0e9;border-color:#a9b7a533;border-radius:13px;box-shadow:0 10px 32px #101d1c40}
+.app.immersive .build-panel h3{color:#dce5d9;font-weight:650}
+.app.immersive .cat{border-radius:7px;background:#2b3d3d;color:#c7d1c9}
+.app.immersive .cat.active{background:#c2d0b2;color:#25362c}
+.app.immersive .build-item{border-radius:7px;background:#263a3a;color:#f0f2ea;border-color:#53645b}
+.app.immersive .build-item.active{border:2px solid #d4d8b4;background:#3c5146;box-shadow:none}
+.app.immersive .build-item small{color:#c8d2c7}
+.app.immersive .tile.solid-block{background:var(--tilecolor)!important;border:1px solid #0004;box-shadow:inset 0 2px #ffffff30,inset 0 -5px #00000024}
+.app.immersive .tile.solid-block .deco{font-size:clamp(10px,1.15vw,17px);opacity:.4;filter:none}
+.app.immersive .world-actions .btn{border-radius:8px;background:#20363b;color:#edf0e9;border-color:#ffffff2a}
+.app.immersive .build-controls .home-return{background:#e8ece3;color:#273b35;border:1px solid #ffffff75;font-weight:800}
+@media(max-width:700px){.app.immersive .build-controls{max-width:calc(100vw - 110px);flex-wrap:wrap;justify-content:flex-end}.app.immersive .build-controls .home-return{order:-1}}
+.world-transfer{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;overflow:hidden;background:radial-gradient(circle at center,#9fc7b7 0,#385e66 16%,#142738 42%,#070d19 100%);opacity:0;pointer-events:none;transition:opacity .25s ease}.world-transfer.active{opacity:1;pointer-events:auto}.world-transfer .portal-ring{position:absolute;width:min(72vw,72vh);aspect-ratio:1;border-radius:50%;border:3px solid #d8f4df;box-shadow:0 0 24px #b4f2d9, inset 0 0 35px #a6f2d566,0 0 100px #80c7e888;transform:scale(.08) rotate(-35deg);opacity:0}.world-transfer.active .portal-ring{animation:portalOpen 1.15s cubic-bezier(.16,.72,.18,1) forwards}.world-transfer .portal-ring:before,.world-transfer .portal-ring:after{content:"";position:absolute;inset:8%;border:2px solid #c5e5e0a8;border-radius:50%;transform:rotate(35deg) scaleX(.72)}.world-transfer .portal-ring:after{inset:17%;transform:rotate(-45deg) scaleX(.8);border-color:#f0dfb8}.world-transfer .transfer-label{position:absolute;bottom:16%;color:#f0f4e9;font:600 12px/1.4 Inter,system-ui,sans-serif;letter-spacing:.28em;text-transform:uppercase;text-align:center;text-shadow:0 0 16px #b7e7dc;opacity:0;animation:transferText .7s .25s ease forwards}.world-transfer .portal-core{position:absolute;width:5vmin;height:5vmin;border-radius:50%;background:#f7f4dc;box-shadow:0 0 30px 15px #a7eed4,0 0 90px 35px #6db6c9;opacity:0}.world-transfer.active .portal-core{animation:coreFlash 1.15s ease forwards}.world-transfer .streaks{position:absolute;inset:-30%;background:repeating-conic-gradient(from 0deg at 50% 50%,transparent 0deg 7deg,#d9f7ec22 7.3deg 7.8deg,transparent 8deg 15deg);opacity:0}.world-transfer.active .streaks{animation:warpStreaks 1.15s ease forwards}@keyframes portalOpen{0%{transform:scale(.08) rotate(-35deg);opacity:0}25%{opacity:1}72%{transform:scale(1.18) rotate(12deg);opacity:1}100%{transform:scale(3.8) rotate(35deg);opacity:0}}@keyframes coreFlash{0%,100%{opacity:0;transform:scale(.2)}35%{opacity:1;transform:scale(1)}72%{opacity:1;transform:scale(2.8)}100%{opacity:0;transform:scale(7)}}@keyframes warpStreaks{0%{opacity:0;transform:scale(.2) rotate(0)}35%{opacity:.8}100%{opacity:0;transform:scale(2.6) rotate(35deg)}}@keyframes transferText{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}@media(prefers-reduced-motion:reduce){.world-transfer *{animation-duration:.15s!important}}
+/* Arrival reveal: the portal clears, then the actual pet realm zooms into view. */
+.app.immersive #build.realm-arrival .world-grid{animation:realmReveal .9s cubic-bezier(.16,.72,.18,1) both}
+.app.immersive #build.realm-arrival{animation:realmSkyReveal .9s ease-out both}
+@keyframes realmReveal{from{opacity:.25;transform:scale(1.12);filter:blur(8px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
+@keyframes realmSkyReveal{from{filter:brightness(.35) saturate(.6)}to{filter:brightness(1) saturate(1)}}
+@media(prefers-reduced-motion:reduce){.app.immersive #build.realm-arrival,.app.immersive #build.realm-arrival .world-grid{animation:none}}
+</style>
+<style>
+/* Mature, atmospheric fantasy UI: restrained colors, less toy-like polish. */
+:root{--bg:#111816;--panel:#1b2421;--panel2:#27332d;--text:#e7e8df;--muted:#a9b3a6;--line:#3a4940;--purple:#849a79;--pink:#b98c86;--mint:#8eb9a6;--yellow:#d7c58e;--shadow:0 12px 35px #0003;color-scheme:dark}
+body{font-family:Inter,ui-sans-serif,system-ui,sans-serif;letter-spacing:.05px}
+.topbar{background:#171f1c}.logo{border-radius:12px;background:linear-gradient(145deg,#536f5a,#b9b18c);box-shadow:none}.welcome{background:linear-gradient(120deg,#293d32,#3b5143 62%,#635c43);color:#f0eee3;border:1px solid #506957;box-shadow:none}.welcome p{color:#d0d8cb}.welcome:after{color:#fff1}.side-note{background:#26372e;color:#dce4d8}.navbtn.active{background:#2d4034;color:#e5eadf;box-shadow:inset 3px 0 #a4b78f}.btn{background:#607d61;box-shadow:none}.btn.pink{background:#a9827b;color:#fff}.stat,.pet-card,.biome-card,.egg-info{box-shadow:none;border-radius:13px}.pet-art{border-radius:9px}.rarity{background:#3a4b3e;color:#c4d7bd}.rarity.Rare{background:#243f45;color:#a9d3d5}.rarity.Epic{background:#49343f;color:#e1b2c8}.rarity.Legendary{background:#4b4530;color:#e2d09a}
+.app.immersive #build{background:linear-gradient(180deg,#111d2a 0%,#425b65 38%,#a5a99a 64%,#b4a083 74%,#526c4b 100%)}
+.app.immersive #build:before{background:radial-gradient(circle at 76% 19%,#e8d7a6 0 1.5%,#d8c89b55 2%,transparent 10%),radial-gradient(ellipse at 12% 78%,#3c5156 0 10%,transparent 10.5%),radial-gradient(ellipse at 28% 81%,#536c65 0 14%,transparent 14.5%),radial-gradient(ellipse at 48% 79%,#778a70 0 12%,transparent 12.5%),radial-gradient(ellipse at 88% 79%,#3c5a50 0 17%,transparent 17.5%)}
+.app.immersive .build-top .section-head,.app.immersive .build-controls{background:#18231fe8;border-color:#ffffff25}.app.immersive .build-panel{background:#1b2623f2;color:#e7e8df;border-color:#69766b66}.app.immersive .cat{background:#303c35;color:#c7d0c6}.app.immersive .cat.active{background:#a9b89a;color:#202b23}.app.immersive .build-item{background:#293831;color:#e7e8df;border-color:#4b5d50}.app.immersive .build-item.active{border-color:#c2c8a7;background:#3c4d40}.app.immersive .world-actions .btn{background:#1e302c;color:#e7e8df}.world-transfer{background:radial-gradient(circle at center,#c2d4c0 0,#496c69 16%,#1a2a2b 42%,#090e0d 100%)}.world-transfer .portal-ring{border-color:#d5dfc2;box-shadow:0 0 24px #c5d8b8,inset 0 0 35px #b3d4c566,0 0 100px #789f8c88}.world-transfer .transfer-label{letter-spacing:.18em}
+/* The arrival reveal targets the actual #worldGrid element. */
+.app.immersive #build.realm-arrival #worldGrid{animation:realmReveal .9s cubic-bezier(.16,.72,.18,1) both}
+@keyframes realmReveal{from{opacity:.15;transform:scale(1.08);filter:blur(7px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
+</style>
+<style>
+/* Show the selected pet inside the realm and give blocks real surfaces instead of emoji stickers. */
+.app.immersive .world-grid{position:absolute}
+.app.immersive .tile.solid-block .deco{display:none!important}
+.app.immersive .tile.solid-block{background-color:var(--tilecolor)!important;background-image:linear-gradient(135deg,#ffffff20,transparent 42%),linear-gradient(0deg,#00000018,transparent 55%),repeating-linear-gradient(90deg,transparent 0 15px,#00000008 15px 17px),repeating-linear-gradient(0deg,transparent 0 15px,#ffffff0a 15px 17px)!important;border:1px solid #0004;box-shadow:inset 0 2px #ffffff30,inset 0 -5px #00000024}
+.app.immersive .tile.block-grass-block,.app.immersive .tile.block-dark-grass{background-image:linear-gradient(180deg,#a8d47b 0 22%,#659b4f 22% 30%,#477643 30% 100%),repeating-linear-gradient(90deg,transparent 0 12px,#ffffff12 12px 15px)!important}
+.app.immersive .tile.block-dirt-block,.app.immersive .tile.block-mud-block{background-image:radial-gradient(square,#594536 1px,transparent 2px),repeating-linear-gradient(135deg,#00000008 0 4px,#ffffff0a 4px 7px)!important}
+.app.immersive .tile.block-stone-block,.app.immersive .tile.block-cobblestone,.app.immersive .tile.block-stone-bricks,.app.immersive .tile.block-masonry-block,.app.immersive .tile.block-granite,.app.immersive .tile.block-slate,.app.immersive .tile.block-basalt{background-image:linear-gradient(135deg,#ffffff20,transparent 35%),repeating-linear-gradient(0deg,transparent 0 18px,#00000018 18px 20px),repeating-linear-gradient(90deg,transparent 0 23px,#00000018 23px 25px)!important}
+.app.immersive .tile.block-wood-block,.app.immersive .tile.block-oak-planks,.app.immersive .tile.block-dark-wood,.app.immersive .tile.block-wood-floor,.app.immersive .tile.block-birch-planks,.app.immersive .tile.block-pine-planks,.app.immersive .tile.block-walnut-planks{background-image:repeating-linear-gradient(0deg,transparent 0 13px,#00000020 13px 15px),repeating-linear-gradient(90deg,#ffffff12 0 2px,transparent 2px 27px)!important}
+.app.immersive .tile.block-brick-block,.app.immersive .tile.block-clay-brick{background-image:repeating-linear-gradient(0deg,transparent 0 17px,#00000035 17px 20px),repeating-linear-gradient(90deg,transparent 0 23px,#00000035 23px 26px)!important}
+.app.immersive .tile.block-glass-block,.app.immersive .tile.block-glass-pane,.app.immersive .tile.block-ice-block,.app.immersive .tile.block-blue-ice{background-image:linear-gradient(135deg,#ffffff99 0 9%,transparent 10% 58%,#ffffff35 59% 65%,transparent 66%),linear-gradient(45deg,#ffffff18,transparent)!important;border:2px solid #e4f8f777!important}
+.pet-world-sprite{position:absolute;z-index:8;left:43%;top:53%;width:clamp(54px,8vw,112px);height:clamp(54px,8vw,112px);display:grid;place-items:center;pointer-events:none;filter:drop-shadow(0 9px 5px #12221c66);animation:petWorldBob 2.8s ease-in-out infinite}
+.pet-world-sprite .pet-body{position:absolute;bottom:7%;width:62%;height:45%;border-radius:48% 48% 35% 35%;background:var(--pet-fur,#c88a55);border:3px solid #352e26;box-shadow:inset -8px -5px #0002}
+.pet-world-sprite .pet-head{position:absolute;top:10%;width:66%;height:58%;border-radius:48% 48% 43% 43%;background:var(--pet-fur,#c88a55);border:3px solid #352e26;display:grid;place-items:center;font-size:clamp(24px,4vw,49px);line-height:1}
+.pet-world-sprite .pet-head:before,.pet-world-sprite .pet-head:after{content:"";position:absolute;top:-17%;width:28%;height:35%;background:var(--pet-fur,#c88a55);border:3px solid #352e26;z-index:-1}
+.pet-world-sprite .pet-head:before{left:2%;transform:rotate(-22deg);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.pet-world-sprite .pet-head:after{right:2%;transform:rotate(22deg);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.pet-world-sprite .pet-face{position:relative;z-index:1;text-shadow:0 2px #fff8}
+.pet-world-sprite .pet-shadow{position:absolute;bottom:0;width:85%;height:12%;border-radius:50%;background:#17251d66;filter:blur(2px)}
+@keyframes petWorldBob{50%{translate:0 -5px}}
+@media(max-width:700px){.pet-world-sprite{left:38%;top:47%;width:58px;height:58px}.pet-world-sprite .pet-head{font-size:26px}}
+</style>
+<style>
+/* Living-world animation: drifting clouds, glowing motes, rippling water, and a roaming pet. */
+.realm-life{position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+.realm-cloud{position:absolute;top:var(--sky-y);left:-24%;width:clamp(100px,17vw,240px);height:clamp(28px,4vw,58px);border-radius:999px;background:linear-gradient(180deg,#f5f1e6d9,#d9e4d8a8);opacity:.64;animation:cloudJourney var(--cloud-speed,58s) linear infinite;animation-delay:var(--cloud-delay,0s)}
+.realm-cloud:before,.realm-cloud:after{content:"";position:absolute;bottom:25%;border-radius:50%;background:inherit}
+.realm-cloud:before{left:17%;width:43%;height:115%}.realm-cloud:after{right:18%;width:34%;height:83%}
+.realm-cloud.cloud-small{transform:scale(.58);opacity:.35;animation-duration:82s}
+@keyframes cloudJourney{from{translate:0 0}to{translate:145vw 0}}
+.realm-mote{position:absolute;left:var(--mx);top:var(--my);width:4px;height:4px;border-radius:50%;background:#fff1ad;box-shadow:0 0 12px 3px #fff0a94a;opacity:0;animation:moteDrift var(--mote-speed,7s) ease-in-out infinite;animation-delay:var(--mote-delay,0s)}
+@keyframes moteDrift{0%,100%{opacity:0;translate:0 12px}25%,70%{opacity:.85}50%{translate:18px -28px;opacity:.6}}
+.app.immersive .tile.water-tile{background-image:repeating-linear-gradient(0deg,transparent 0 11px,#d9f5e544 12px 14px,transparent 15px 24px),linear-gradient(180deg,#77b8bd,#477f87)!important;animation:waterShimmer 3.8s ease-in-out infinite alternate}
+@keyframes waterShimmer{from{filter:brightness(.96)}to{filter:brightness(1.12)}}
+.app.immersive .pet-world-sprite{transition:left .75s cubic-bezier(.2,.75,.2,1),top .75s cubic-bezier(.2,.75,.2,1);will-change:left,top}
+.app.immersive .pet-world-sprite.pet-walking{animation:petWalk .32s ease-in-out infinite alternate}
+@keyframes petWalk{from{translate:0 1px;rotate:-3deg}to{translate:0 -5px;rotate:3deg}}
+.app.immersive .pet-world-sprite .pet-body{animation:petBreath 2.6s ease-in-out infinite}
+@keyframes petBreath{50%{scale:1.035 .96}}
+.app.immersive .pet-world-sprite .pet-head{animation:petLook 5.5s ease-in-out infinite;transform-origin:bottom center}
+@keyframes petLook{0%,42%,100%{rotate:0deg}48%,55%{rotate:-8deg}62%,68%{rotate:6deg}}
+@media(prefers-reduced-motion:reduce){.realm-cloud,.realm-mote,.app.immersive .tile.water-tile,.app.immersive .pet-world-sprite,.app.immersive .pet-world-sprite *{animation:none!important;transition:none!important}}
+</style>
+<style>
+/* CINEMATIC REALM: layered atmosphere, moving wildlife, light rays, and living scenery. */
+.app.immersive #build{isolation:isolate;animation:skyBreath 18s ease-in-out infinite alternate}
+.app.immersive #build:before{z-index:0;animation:lightShift 22s ease-in-out infinite alternate;will-change:background-position,filter}
+.app.immersive #build .world-grid{transform-origin:center 65%;animation:cinemaCamera 24s ease-in-out infinite alternate;will-change:transform,filter}
+.cinema-atmosphere{position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;contain:strict}
+.cinema-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 38%,#07130e24 78%,#07100bd1 130%);opacity:.55}
+.cinema-sunbeam{position:absolute;top:-35%;left:var(--beam-x);height:100%;width:clamp(35px,7vw,110px);background:linear-gradient(180deg,#fff5cf2a,transparent);filter:blur(12px);transform:rotate(var(--beam-angle));transform-origin:top center;opacity:.45;animation:beamSway 13s ease-in-out infinite alternate;animation-delay:var(--beam-delay)}
+.cinema-bird{position:absolute;left:-10%;top:var(--bird-y);width:26px;height:10px;animation:birdFlight var(--bird-speed) linear infinite;animation-delay:var(--bird-delay);opacity:0;filter:drop-shadow(0 2px 2px #192a2a55)}
+.cinema-bird:before,.cinema-bird:after{content:"";position:absolute;top:1px;width:13px;height:7px;border-top:2px solid #263b3b;border-radius:80% 80% 0 0;animation:wingBeat .42s ease-in-out infinite alternate}
+.cinema-bird:before{left:0;transform:rotate(14deg)}.cinema-bird:after{right:0;transform:rotate(-14deg)}
+.cinema-leaf{position:absolute;left:var(--leaf-x);top:-8%;width:9px;height:15px;border-radius:100% 0 100% 0;background:var(--leaf-color);box-shadow:0 0 8px #e4f1bd22;opacity:0;animation:leafFall var(--leaf-speed) linear infinite;animation-delay:var(--leaf-delay)}
+.cinema-glow{position:absolute;left:var(--glow-x);top:var(--glow-y);width:5px;height:5px;border-radius:50%;background:#fff3a7;box-shadow:0 0 15px 5px #ffeaa044;animation:glowPulse var(--glow-speed) ease-in-out infinite;animation-delay:var(--glow-delay)}
+.cinema-ripple{position:absolute;left:var(--ripple-x);top:var(--ripple-y);width:clamp(34px,5vw,85px);height:16px;border:1px solid #e2fff5a8;border-radius:50%;opacity:0;animation:rippleOut 3.8s ease-out infinite;animation-delay:var(--ripple-delay)}
+.app.immersive .tile:not(.solid-block) .deco{animation:scenerySway 4.5s ease-in-out infinite;transform-origin:50% 100%;will-change:transform}
+.app.immersive .tile:nth-child(3n) .deco{animation-delay:-1.4s}.app.immersive .tile:nth-child(5n) .deco{animation-delay:-2.7s}
+.app.immersive .pet-world-sprite{filter:drop-shadow(0 10px 5px #12221c66) drop-shadow(0 0 13px #f9e9b52b);animation:petHeroIdle 3.3s ease-in-out infinite}
+.app.immersive .pet-world-sprite .pet-head{animation:petLook 5.5s ease-in-out infinite,petBlink 6s linear infinite}
+.app.immersive .pet-world-sprite .pet-body:after{content:"";position:absolute;right:-17%;bottom:23%;width:29%;height:32%;border-radius:100% 20% 80% 30%;background:var(--pet-fur,#b9a276);border:2px solid #352e26;transform-origin:left center;animation:tailWag .55s ease-in-out infinite alternate}
+.app.immersive #build.realm-arrival .cinema-atmosphere{animation:atmosphereReveal 1.4s ease-out both}
+@keyframes skyBreath{from{filter:saturate(.92)}to{filter:saturate(1.12)}}
+@keyframes lightShift{0%{filter:brightness(.88) saturate(.9)}45%{filter:brightness(1.08) saturate(1.08)}100%{filter:brightness(.96) saturate(1.02)}}
+@keyframes cinemaCamera{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.035) translate3d(-.5%,.25%,0)}}
+@keyframes beamSway{from{translate:-2vw 0;opacity:.15}to{translate:4vw 5vh;opacity:.55}}
+@keyframes birdFlight{0%{left:-8%;translate:0 0;opacity:0;scale:.7}8%{opacity:.75}50%{translate:4vw -14px}92%{opacity:.7}100%{left:110%;translate:0 5px;opacity:0;scale:1.1}}
+@keyframes wingBeat{from{scale:1 .4}to{scale:1 1.2}}
+@keyframes leafFall{0%{translate:0 -4vh;rotate:0deg;opacity:0}12%{opacity:.85}55%{translate:7vw 48vh;rotate:260deg}100%{translate:-2vw 112vh;rotate:620deg;opacity:0}}
+@keyframes glowPulse{0%,100%{opacity:.2;scale:.65}50%{opacity:1;scale:1.45}}
+@keyframes rippleOut{0%{opacity:0;scale:.45 0.4}25%{opacity:.65}100%{opacity:0;scale:1.7 1}}
+@keyframes scenerySway{0%,100%{rotate:-2deg;translate:0 0}50%{rotate:3deg;translate:0 -2px}}
+@keyframes petHeroIdle{0%,100%{translate:0 0;rotate:0deg}30%{translate:0 -7px;rotate:-2deg}60%{translate:0 -2px;rotate:2deg}}
+@keyframes tailWag{from{rotate:-24deg}to{rotate:28deg}}
+@keyframes petBlink{0%,44%,48%,100%{filter:brightness(1)}46%{filter:brightness(.7)}}
+@keyframes atmosphereReveal{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:blur(0)}}
+@media(prefers-reduced-motion:reduce){.app.immersive #build,.app.immersive #build:before,.app.immersive .world-grid,.cinema-atmosphere *,.app.immersive .tile .deco,.app.immersive .pet-world-sprite,.app.immersive .pet-world-sprite *{animation:none!important}}
+</style>
+<style>
+/* The world is now a live 3D scene; the old tile grid remains only as saved build data. */
+.realm-3d-canvas{position:absolute;inset:0;width:100%;height:100%;display:none;z-index:2;outline:0;touch-action:pan-y;cursor:crosshair}
+.app.immersive #worldGrid>.tile,.app.immersive #worldGrid>.pet-world-sprite{visibility:hidden!important;pointer-events:none!important}
+.app.immersive #worldGrid{background:transparent!important;z-index:1}
+.app.immersive .world-wrap{pointer-events:none}
+.app.immersive .world-grid{pointer-events:none}
+.app.immersive .world-banner,.app.immersive .world-hero,.app.immersive .build-top,.app.immersive .build-panel,.app.immersive .world-actions{pointer-events:auto}
+.app.immersive .world-banner{z-index:4}.app.immersive .world-hero{z-index:5}.app.immersive .build-top{z-index:5}.app.immersive .world-actions{z-index:6}.app.immersive .build-panel{z-index:7}
+@media(max-width:700px){.realm-3d-canvas{touch-action:manipulation}}
+</style>
+<style>
+/* FIX: the abandoned 3D overlay had hidden the actual clickable build tiles. */
+.app.immersive .world-wrap,.app.immersive .world-grid{pointer-events:auto!important}
+.app.immersive #worldGrid>.tile{visibility:visible!important;pointer-events:auto!important}
+.app.immersive .tile{background:var(--tilecolor,#5b8b4e)!important;cursor:crosshair;touch-action:manipulation}
+.app.immersive .tile.solid-block{box-shadow:inset 0 3px #ffffff24,inset 0 -8px #00000026,0 1px 2px #07130c55;border:1px solid #15271d66}
+.app.immersive .tile:hover{filter:brightness(1.18);outline:2px solid #f1dfac!important}
+/* A more mature, premium exploration-game art direction. */
+:root{--bg:#111815;--panel:#1a231e;--panel2:#253229;--text:#edf0e7;--muted:#aab6a8;--line:#39483d;--purple:#a58b62;--pink:#c5a57b;--mint:#85b5a0;--yellow:#e8d39a;--shadow:0 16px 42px #00000024}
+body{font-family:Inter,"Segoe UI",system-ui,sans-serif;letter-spacing:.01em}
+.topbar{background:#151d18;border-color:#39483d}
+.logo{border-radius:12px;background:linear-gradient(145deg,#4c6650,#b39a6d);box-shadow:0 7px 22px #0004}
+.welcome{background:linear-gradient(115deg,#263d30,#344737 58%,#746044)!important;color:#f0f0e5!important;border:1px solid #536d53!important}
+.welcome p{color:#cbd5c5!important}
+.navbtn.active{background:#a58b621c!important;box-shadow:inset 3px 0 #c3a574!important}
+.btn{background:linear-gradient(135deg,#6c8768,#4c6854)!important;box-shadow:0 5px 16px #0003}
+.btn.pink{background:linear-gradient(135deg,#b19a78,#806b53)!important;color:#fff!important}
+.pet-card,.stat,.biome-card,.egg-info,.world-wrap,.build-panel{box-shadow:0 12px 30px #0002}
+.pet-card,.stat,.biome-card{border-color:#35463a}
+.app.immersive #build{background:linear-gradient(#111d2b 0%,#3c5964 37%,#b1a080 70%,#344b38 100%)}
+.app.immersive #build:before{background:radial-gradient(ellipse at 72% 18%,#f4dca533 0 2%,#e7c98a22 3%,transparent 18%),linear-gradient(180deg,#07111b44,transparent 38%,#14251b88 100%)}
+.app.immersive .build-top .section-head,.app.immersive .build-controls,.app.immersive .world-banner,.app.immersive .world-actions{background:#111b1bd9;border-color:#d7c49b44}
+.app.immersive .build-panel{background:#151f1ceF;border-color:#c1b18b55}
+.app.immersive .cat{background:#28372f;color:#c4cec1}
+.app.immersive .cat.active{background:#b39a6d;color:#172019}
+.app.immersive .build-item{background:#26362e;border-color:#4d6253}
+.app.immersive .build-item.active{border-color:#e8d39a;background:#3b4b3d;box-shadow:0 0 16px #e8d39a20}
+.app.immersive .build-item span{filter:saturate(.8)}
+.app.immersive .tile .deco{filter:drop-shadow(0 5px 5px #07120c99)}
+@media(max-width:700px){.app.immersive .build-panel{background:#151f1cf2}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+<div class="app" id="appRoot">
+<header class="topbar"><div class="brand"><div class="logo">🐾</div><div><h1>Endless Pet Universe</h1><p>A little world for every wonderful pet</p></div></div><div class="top-actions"><div class="pill coin">✦ <span id="coins">250</span> star coins</div><div class="pill">🌱 <span id="level">Level 1</span></div></div></header>
+<nav class="mobile-nav" id="mobileNav"></nav>
+<div class="layout"><aside class="sidebar" id="sideNav"></aside><main class="main">
+<section class="page active" id="home"><div class="welcome"><div><h2>Your universe starts here ✨</h2><p>Hatch a new friend, give them a home, and build a whole world that feels like theirs. There's always something new to discover.</p><div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap"><button class="btn" onclick="showPage('hatchery')">🥚 Hatch a pet</button><button class="btn secondary" onclick="showPage('build')">🧱 Build a world</button><button class="btn secondary" id="dailyCoinButton" onclick="claimDailyCoins()">🎁 Daily +75 coins</button></div></div><div class="hero-pet" id="heroPet">🦊</div></div><div class="stats"><div class="stat"><div class="ico">🐾</div><strong id="statPets">0</strong><span>Pets discovered</span></div><div class="stat"><div class="ico">🌎</div><strong id="statWorlds">0</strong><span>Worlds to explore</span></div><div class="stat"><div class="ico">🧱</div><strong id="statBlocks">0</strong><span>Blocks placed</span></div></div><div class="section-head"><div><h3>Your newest friends</h3><p>Pick a pet to visit its world.</p></div><button class="btn secondary" onclick="showPage('pets')">View all pets →</button></div><div class="pet-grid" id="recentPets"></div><div class="footer-note">Your universe is saved on this device. Keep creating at your own pace. 💜</div></section>
+<section class="page" id="hatchery"><div class="section-head" style="margin-top:0"><div><h3>✨ The Hatchery</h3><p>Every egg holds a new possibility.</p></div><div class="pill">🥚 Mystery Egg</div></div><div class="hatch-layout"><div class="egg-stage"><div class="egg" id="egg">🥚</div><h2 id="eggTitle">A little mystery awaits…</h2><p id="eggSubtitle">What friend will you meet today?</p><button class="btn pink" id="hatchBtn" onclick="hatchPet()">✨ Hatch mystery egg · 50 coins</button></div><div class="egg-info"><h3>Inside every egg…</h3><p>Your new pet comes with its own biome and a fresh world to build. Rarer pets have special colors and unusual habitats. You can hatch as many different friends as you like.</p><div class="odds"><div><span>Common</span><b>55%</b></div><div><span style="color:#2581a0">Rare</span><b>27%</b></div><div><span style="color:#c04d91">Epic</span><b>14%</b></div><div><span style="color:#b17b00">Legendary</span><b>4%</b></div></div><p>Each pet is added to your inventory, and its own world is created automatically. No real money, no timers—just play.</p><div class="result" id="hatchResult"><div class="creature" id="resultArt">🐱</div><strong id="resultName">New friend!</strong><p id="resultMeta">A brand-new world is waiting.</p><button class="btn full" style="margin-top:12px" onclick="visitNewestWorld()">Build their world →</button></div></div></div></section>
+<section class="page" id="pets"><div class="section-head" style="margin-top:0"><div><h3>🐾 Your pet inventory</h3><p>Every friend has their own world. Select one to build their habitat.</p></div><button class="btn" onclick="showPage('hatchery')">+ Hatch pet</button></div><div class="pet-grid" id="allPets"></div></section>
+<section class="page" id="build"><div class="build-top"><div class="section-head" style="margin:0"><div><h3>🧱 World Builder</h3><p>Make their biome your own, one block at a time.</p></div></div><div class="build-controls"><select class="select" id="petSelect" aria-label="Choose a pet" onchange="selectPet(this.value)"></select><button class="btn secondary" onclick="clearWorld()">↺ Clear</button></div></div><div class="world-hero"><div class="avatar" id="worldPetArt">🐱</div><div style="flex:1;min-width:0"><strong id="worldPetName">Your pet's world</strong><span id="worldBiome">Forest biome · A fresh canvas</span></div><button class="btn secondary" onclick="showPage('pets')">My pets</button></div><div class="builder"><div class="world-wrap"><div class="world-banner"><span id="worldNameLabel">🌳 Meadow Haven</span><span>Tap a tile to build</span></div><div class="world-grid" id="worldGrid" aria-label="Buildable world grid"></div><div class="world-actions"><button class="btn secondary" onclick="rotateDecor()">↻ Rotate item</button><button class="btn secondary" onclick="undoBuild()">↶ Undo last</button><button class="btn secondary" onclick="showToast('Your world is saved automatically! 💾')">💾 Save world</button></div></div><aside class="build-panel"><h3>Build your habitat</h3><div class="categories" id="categories"></div><div class="item-list" id="itemList"></div><p class="hint">Choose an item, then tap any tile to place it. Pick the eraser to remove things. You have <b>100+ building choices</b> across blocks, furniture, nature, and home essentials.</p></aside></div></section>
+<section class="page" id="discover"><div class="section-head" style="margin-top:0"><div><h3>🌈 Discover biomes</h3><p>Every pet belongs to a biome. Their world can become anything you imagine.</p></div></div><div class="discover-grid" id="biomeGrid"></div></section>
+</main></div><div class="toast" id="toast" role="status"></div>
+</div>
+<script>
+const NAV=[['home','🏡','Home'],['hatchery','🥚','Hatchery'],['pets','🐾','My Pets'],['build','🧱','World Builder'],['discover','🌈','Biomes']];
+const BIOMES=[{name:'Enchanted Forest',icon:'🌳',bg:'#d8f2cf',ground:'#9bcf8c',desc:'Mossy paths, leafy trees, flower patches, and cozy woodland homes.'},{name:'Frostfall Peaks',icon:'❄️',bg:'#d9f0ff',ground:'#c2e4f7',desc:'Snowy blocks, ice crystals, warm cabins, and frozen ponds.'},{name:'Sunblush Desert',icon:'🌵',bg:'#ffebc5',ground:'#eac17d',desc:'Golden sand, cacti, sandstone houses, and oasis pools.'},{name:'Coral Cove',icon:'🐚',bg:'#d3f5f4',ground:'#78cfcf',desc:'Shimmering water, coral gardens, shells, and underwater-inspired homes.'},{name:'Cloudberry Sky',icon:'☁️',bg:'#e8e0ff',ground:'#c6b7f3',desc:'Cloud paths, floating gardens, starlight lamps, and sky castles.'},{name:'Candyglow Grove',icon:'🍭',bg:'#ffe0ef',ground:'#f6a9cf',desc:'Candy-colored cottages, lollipop trees, frosting paths, and sweet decorations.'},{name:'Moonlit Marsh',icon:'🌙',bg:'#dcdcf8',ground:'#9699cf',desc:'Glowing mushrooms, silver ponds, moon flowers, and mysterious little nooks.'},{name:'Volcanic Emberland',icon:'🌋',bg:'#ffdfd1',ground:'#b97d6b',desc:'Warm stone, ember plants, dark rock, and fireproof cozy dens.'}];
+const PETS=[{name:'Mossy',kind:'Fern Fox',art:'🦊',biome:0,rarity:'Common',bg:'#d9f0ce'},{name:'Pip',kind:'Cloud Bunny',art:'🐰',biome:4,rarity:'Common',bg:'#e9e4ff'},{name:'Bubbles',kind:'Coral Kitty',art:'🐱',biome:3,rarity:'Rare',bg:'#d2f6f5'},{name:'Sprout',kind:'Garden Dragon',art:'🐲',biome:0,rarity:'Rare',bg:'#d7f2d5'},{name:'Glacier',kind:'Snow Pup',art:'🐶',biome:1,rarity:'Epic',bg:'#dcefff'},{name:'Peaches',kind:'Candy Fawn',art:'🦌',biome:5,rarity:'Epic',bg:'#ffe0ef'},{name:'Comet',kind:'Star Kitten',art:'🐈',biome:4,rarity:'Legendary',bg:'#e6dfff'},{name:'Cinder',kind:'Ember Cub',art:'🐻',biome:7,rarity:'Rare',bg:'#ffe0d5'},{name:'Sandy',kind:'Dune Meerkat',art:'🦦',biome:2,rarity:'Common',bg:'#ffedc9'},{name:'Luna',kind:'Moon Moth',art:'🦋',biome:6,rarity:'Legendary',bg:'#e5e2ff'},{name:'Coralie',kind:'Pearl Turtle',art:'🐢',biome:3,rarity:'Rare',bg:'#d1f4ec'},{name:'Pudding',kind:'Jelly Bear',art:'🐻',biome:5,rarity:'Common',bg:'#ffdfed'}];
+const ITEMS=[
+['Blocks',[['Grass block','🟩','#88bd70'],['Dirt block','🟫','#a97855'],['Stone block','⬜','#aeb5c5'],['Cobblestone','🪨','#9aa1af'],['Sand block','🟨','#e7ca83'],['Snow block','⬜','#d9efff'],['Ice block','🧊','#a6e2f4'],['Wood block','🟫','#b98255'],['Oak planks','🪵','#d3a36a'],['Dark wood','🪵','#76543f'],['Brick block','🧱','#c77970'],['Glass block','🔹','#a6e5ed'],['Clay block','🟧','#d99d78'],['Marble','◽','#e7e4ef'],['Moss block','🌿','#689b63'],['Coral block','🪸','#f08eaa'],['Crystal block','💎','#b9a5f7'],['Lava rock','🌋','#6d5358'],['Cloud block','☁️','#f5f4ff'],['Candy block','🍬','#f2a6d0']]],
+['Floors',[['Wood floor','🪵','#c99a67'],['Tile floor','🔲','#d6d8e5'],['Checker floor','▪️','#b9c4d7'],['Carpet','🟪','#a997df'],['Pink carpet','🩷','#efb0d0'],['Stone path','▫️','#b4b8c6'],['Pebble path','🪨','#a6adae'],['Sand path','🟨','#e7c783'],['Snow path','❄️','#e3f4ff'],['Moss path','🌱','#85b87b']]],
+['Nature',[['Oak tree','🌳','#c8e8bb'],['Pine tree','🌲','#c8e8bb'],['Flower','🌸','#f9dce9'],['Sunflower','🌻','#fff0bf'],['Bush','🌿','#d2ebca'],['Mushroom','🍄','#e7d5f3'],['Tall grass','🌾','#d9edc4'],['Cactus','🌵','#ffe5bb'],['Palm tree','🌴','#d2f3df'],['Snowy pine','🎄','#e0f2ff'],['Coral','🪸','#d2f3f5'],['Seaweed','🪴','#c5efeb'],['Crystal cluster','💎','#e5e0ff'],['Glow mushroom','🍄','#e8e0ff'],['Lollipop tree','🍭','#ffe1ef'],['Cloud shrub','☁️','#eeeaff'],['Moon flower','🌙','#e7e6ff'],['Ember plant','🔥','#ffe1d7']]],
+['Furniture',[['Comfy sofa','🛋️','#f6e3ee'],['Armchair','🪑','#f8e6d7'],['Bed','🛏️','#dce8ff'],['Pet bed','🧺','#fbe3d4'],['Dining table','🪑','#f2e3d2'],['Chair','🪑','#eee1cf'],['Bookshelf','📚','#e8d9c8'],['Desk','🗄️','#e3dfd8'],['Wardrobe','🚪','#e6d7ca'],['Rug','🟣','#e7ddff'],['Coffee table','🪵','#eee1d2'],['Piano','🎹','#e5e5ec'],['Toy chest','🧸','#f9e2b9'],['Cat tree','🐈','#f5e4d4'],['Pet tunnel','🌀','#e0e8f9'],['Hammock','🌈','#ffe0ec'],['Beanbag','🟠','#fbe1cb'],['Books stack','📚','#e7e1d7']]],
+['Home',[['Front door','🚪','#ead8bf'],['Window','🪟','#d8f3ff'],['Roof piece','🏠','#e8c3b7'],['Fence','🪵','#ead2ad'],['Gate','🚧','#ecd6b3'],['Lamp','💡','#fff2bd'],['Ceiling light','✨','#fff1c9'],['Kitchen stove','🍳','#e7e8ee'],['Fridge','🧊','#e6f1f8'],['Sink','🚰','#e1f4f5'],['Bathtub','🛁','#e3f2ff'],['Toilet','🚽','#e8f2fa'],['Shower','🚿','#d8f3f7'],['Counter','🧱','#eee6df'],['Cupboard','🗄️','#e8d8c9'],['Mirror','🪞','#e3e8f7'],['Plant pot','🪴','#e3eed9'],['Clock','🕒','#fff0d1'],['Picture frame','🖼️','#f5e2d6'],['Mail box','📫','#d8e6f6']]],
+['Fun',[['Pond','💧','#a7e3ef'],['Fountain','⛲','#d2eafa'],['Swing','🎠','#f5d6e4'],['Slide','🛝','#f6d3df'],['Trampoline','⭕','#dcd5ff'],['Sandbox','🏖️','#f5dfaa'],['Picnic blanket','🧺','#f7d6df'],['Campfire','🔥','#ffdbb9'],['Bird bath','🐦','#d4ebf0'],['Mailbox','📮','#e9c7cb'],['Treasure chest','🧰','#f5d9a4'],['Star lantern','🏮','#e8e0ff'],['Wind chime','🎐','#d9f3ef'],['Garden arch','🌸','#f6dce9'],['Tiny bridge','🌉','#d9c7ad'],['Rock pile','🪨','#d8dbe3'],['Waterfall','💦','#c8eff6'],['Crystal lamp','🔮','#e8ddff']]],
+['Special',[['Rainbow','🌈','#fbe0ee'],['Star statue','⭐','#fff1b9'],['Magic portal','🌀','#e1d9ff'],['Pet statue','🐾','#e9e2ff'],['Cloud rug','☁️','#e7e3ff'],['Heart bush','💗','#ffe0ee'],['Fairy lights','✨','#fff2c9'],['Moon fountain','🌙','#e1e0ff'],['Crystal arch','💎','#e2ddff'],['Golden throne','👑','#ffedb7']]],
+['Eraser',[['Eraser','🧽','transparent']]]
+];
+const STORE='endlessPetUniverseSave_v1';let state={coins:250,level:1,pets:[],selectedPet:null,worlds:{},lastPet:null};let selectedItem=ITEMS[0][1][0],activeCategory='Blocks',rotation=0,undoStack=[],toastTimer;
+function safeLoad(){try{let d=JSON.parse(localStorage.getItem(STORE));if(d&&typeof d==='object')state={...state,...d}}catch(e){}if(!state.pets.length){state.pets=[{...PETS[0],id:'pet-starter',name:'Mossy'}];state.selectedPet=state.pets[0].id;state.coins=250;state.level=1;createWorld(state.pets[0]);save()}}
+function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
+function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function createWorld(pet){if(!state.worlds[pet.id]){let tiles=Array.from({length:160},(_,i)=>({item:null,rot:0}));for(let i=0;i<160;i++)if(i>111&&Math.random()<.17)tiles[i]={item:{name:'Grass block',icon:'🟩',color:BIOMES[pet.biome].ground},rot:0};state.worlds[pet.id]={tiles,name:BIOMES[pet.biome].name+' Haven'}}else if(state.worlds[pet.id].tiles.length===80){state.worlds[pet.id].tiles=Array.from({length:160},(_,i)=>state.worlds[pet.id].tiles[i]||{item:null,rot:0})}}
+function navHTML(){return NAV.map(([id,icon,label])=>`<button class="navbtn ${id==='home'?'active':''}" data-page="${id}" onclick="showPage('${id}')"><span class="navicon">${icon}</span>${label}</button>`).join('')}
+document.getElementById('sideNav').innerHTML=navHTML();document.getElementById('mobileNav').innerHTML=navHTML();
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('appRoot').classList.toggle('immersive',id==='build');if(id==='build')renderBuilder();if(id==='pets')renderPets();if(id==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
+function petCard(p){return `<button class="pet-card ${p.id===state.selectedPet?'selected':''}" onclick="choosePet('${p.id}')"><div class="pet-art" style="--petbg:${p.bg||'#e4e2ff'}">${p.art}</div><strong>${p.name}</strong><small>${p.kind} · ${BIOMES[p.biome].icon} ${BIOMES[p.biome].name}</small><span class="rarity ${p.rarity}">${p.rarity}</span></button>`}
+function renderPets(){document.getElementById('allPets').innerHTML=state.pets.length?state.pets.map(petCard).join(''):`<div class="empty"><div class="big">🥚</div><b>Your story starts with an egg!</b><p>Hatch your first pet to fill your inventory.</p><button class="btn" onclick="showPage('hatchery')">Visit the Hatchery</button></div>`}
+function renderHome(){document.getElementById('coins').textContent=state.coins;document.getElementById('level').textContent='Level '+state.level;document.getElementById('statPets').textContent=state.pets.length;document.getElementById('statWorlds').textContent=Object.keys(state.worlds).length;document.getElementById('statBlocks').textContent=Object.values(state.worlds).reduce((n,w)=>n+w.tiles.filter(t=>t.item||t.placedBlock).length,0);document.getElementById('recentPets').innerHTML=state.pets.slice(-4).reverse().map(petCard).join('');document.getElementById('heroPet').textContent=(state.pets.find(p=>p.id===state.selectedPet)||state.pets[0]||{art:'🦊'}).art}
+function choosePet(id){state.selectedPet=id;save();renderPets();renderHome();renderBuilder();showToast('Selected friend! Their world is ready 🌎')}
+function selectPet(id){state.selectedPet=id;save();renderBuilder()}
+function weightedPet(){let r=Math.random()*100,rarity=r<4?'Legendary':r<18?'Epic':r<45?'Rare':'Common';let pool=PETS.filter(p=>p.rarity===rarity);if(!pool.length)pool=PETS;let base=pool[Math.floor(Math.random()*pool.length)];let names=['Twinkle','Clover','Mochi','Pebble','Daisy','Toffee','Waffles','Doodle','Misty','Sprinkles','Nibbles','Poppy','Mallow','Button','Biscuit','Tinsel','Puddle','Fig'];return {...base,id:uid(),name:names[Math.floor(Math.random()*names.length)],kind:base.kind,art:base.art,biome:base.biome,rarity:rarity,bg:base.bg}}
+function hatchPet(){if(state.coins<50){showToast('You need 50 star coins to hatch an egg.');return}let btn=document.getElementById('hatchBtn'),egg=document.getElementById('egg');btn.disabled=true;btn.textContent='✨ Magic is happening…';egg.classList.add('shake');document.getElementById('hatchResult').classList.remove('show');setTimeout(()=>{egg.classList.remove('shake');let pet=weightedPet();state.coins-=50;state.pets.push(pet);state.selectedPet=pet.id;state.lastPet=pet.id;createWorld(pet);state.level=1+Math.floor(state.pets.length/3);save();document.getElementById('resultArt').textContent=pet.art;document.getElementById('resultName').textContent='You found '+pet.name+'!';document.getElementById('resultMeta').textContent=pet.rarity+' '+pet.kind+' · '+BIOMES[pet.biome].name;document.getElementById('hatchResult').classList.add('show');document.getElementById('eggTitle').textContent='A new friend!';document.getElementById('eggSubtitle').textContent='Your next adventure starts now.';btn.disabled=false;btn.textContent='🥚 Hatch another egg · 50 coins';renderHome();renderPets();renderBuilder();showToast(pet.name+' joined your universe! 💖')},950)}
+function visitNewestWorld(){showPage('build');renderBuilder()}
+function renderBiomes(){document.getElementById('biomeGrid').innerHTML=BIOMES.map((b,i)=>`<article class="biome-card"><div class="biome-art" style="background:${b.bg}">${b.icon}</div><h3>${b.name}</h3><p>${b.desc}</p><button class="btn secondary" onclick="findBiome(${i})">${state.pets.some(p=>p.biome===i)?'Visit a pet here':'Discover this biome'}</button></article>`).join('')}
+function findBiome(i){let p=state.pets.find(p=>p.biome===i);if(p){state.selectedPet=p.id;save();showPage('build');renderBuilder()}else{showToast('Hatch more eggs to discover a pet from this biome! 🥚')}}
+function renderBuilder(){let select=document.getElementById('petSelect');if(!state.pets.length){select.innerHTML='<option>No pets yet</option>';document.getElementById('worldGrid').innerHTML='';return}if(!state.pets.some(p=>p.id===state.selectedPet))state.selectedPet=state.pets[0].id;select.innerHTML=state.pets.map(p=>`<option value="${p.id}" ${p.id===state.selectedPet?'selected':''}>${p.art} ${p.name}</option>`).join('');let pet=state.pets.find(p=>p.id===state.selectedPet);if(!pet)return;createWorld(pet);let biome=BIOMES[pet.biome],world=state.worlds[pet.id];document.getElementById('worldPetArt').textContent=pet.art;document.getElementById('worldPetName').textContent=pet.name+'’s world';document.getElementById('worldBiome').textContent=biome.name+' · '+pet.kind;document.getElementById('worldNameLabel').textContent=biome.icon+' '+world.name;renderCategories();renderItems();renderTiles();save()}
+function renderCategories(){document.getElementById('categories').innerHTML=ITEMS.map(([cat])=>`<button class="cat ${cat===activeCategory?'active':''}" onclick="setCategory('${cat}')">${cat}</button>`).join('')}
+function setCategory(cat){activeCategory=cat;selectedItem=ITEMS.find(x=>x[0]===cat)[1][0];renderCategories();renderItems()}
+function renderItems(){let arr=(ITEMS.find(x=>x[0]===activeCategory)||ITEMS[0])[1];document.getElementById('itemList').innerHTML=arr.map((it,i)=>`<button class="build-item ${selectedItem.name===it[0]?'active':''}" onclick="pickItem('${activeCategory}',${i})" title="${it[0]}"><span>${it[1]}</span><small>${it[0]}</small></button>`).join('')}
+function pickItem(cat,i){activeCategory=cat;selectedItem=ITEMS.find(x=>x[0]===cat)[1][i];renderCategories();renderItems()}
+function renderTiles(){let pet=state.pets.find(p=>p.id===state.selectedPet),world=state.worlds[pet.id],biome=BIOMES[pet.biome],grid=document.getElementById('worldGrid');grid.style.background=biome.ground;grid.innerHTML=world.tiles.map((t,i)=>{let it=t.item;let color=it&&it.color&&it.color!=='transparent'?it.color:biome.ground;let icon=it?it.icon:'';return `<button class="tile" aria-label="Tile ${i+1}${it?', '+it.name:''}" title="${it?it.name:'Empty tile'}" onclick="placeItem(${i})" style="--tilecolor:${color};background:${color}"><span class="deco" style="transform:rotate(${t.rot||0}deg)">${icon}</span></button>`}).join('')}
+function placeItem(i){let pet=state.pets.find(p=>p.id===state.selectedPet);if(!pet)return;let w=state.worlds[pet.id];if(!w||!w.tiles[i])return;undoStack.push(JSON.stringify(w.tiles));if(undoStack.length>40)undoStack.shift();const tile=w.tiles[i];if(selectedItem[0]==='Eraser'){tile.item=null;tile.placedBlock=null}else{tile.item={name:selectedItem[0]||selectedItem.name,icon:selectedItem[1]||selectedItem.icon,color:selectedItem[2]||selectedItem.color};tile.rot=rotation}save();renderTiles();renderHome()}
+function rotateDecor(){rotation=(rotation+45)%360;showToast('Next item rotation: '+rotation+'°')}
+function undoBuild(){let pet=state.pets.find(p=>p.id===state.selectedPet);if(!undoStack.length||!pet){showToast('Nothing to undo yet.');return}state.worlds[pet.id].tiles=JSON.parse(undoStack.pop());save();renderTiles();renderHome();showToast('Last build action undone.')}
+function clearWorld(){let pet=state.pets.find(p=>p.id===state.selectedPet);if(!pet)return;if(!confirm('Clear every block in '+pet.name+'’s world?'))return;undoStack.push(JSON.stringify(state.worlds[pet.id].tiles));state.worlds[pet.id].tiles=Array.from({length:160},()=>({item:null,rot:0}));save();renderTiles();renderHome();showToast('Fresh canvas! Build something wonderful.')}
+/* Expand the catalog with additional terrain, stone, wood, and architectural pieces. */
+ITEMS.push(['Terrain+',[
+['Mossy stone','🪨','#758875'],['Granite','🟥','#ad8178'],['Slate','⬛','#59636c'],['Basalt','▪️','#42494e'],['Limestone','◻️','#d0c8ac'],['Red sandstone','🟧','#c77f5d'],['White quartz','⬜','#e7e4da'],['Amethyst','🔮','#9275b8'],['Obsidian','⬛','#37364c'],['Copper block','🟫','#b87554'],['Gold block','🟨','#d6b65d'],['Silver block','◽','#bdc5ca'],['Prismarine','🟦','#64a9a0'],['Deep stone','◾','#4d5962'],['Mud block','🟫','#77604d'],['Clay brick','🧱','#bd8e79'],['Packed snow','❄️','#dce7eb'],['Blue ice','🧊','#82c5d9'],['Dried grass','🟨','#b8a36c'],['Dark grass','🟩','#416b4d']
+]],['Wood + Build',[
+['Birch planks','🪵','#d9c59a'],['Pine planks','🪵','#b68c61'],['Walnut planks','🪵','#78543f'],['White timber','🪵','#e4d8be'],['Wood beams','🪵','#9b704c'],['Stone bricks','🧱','#8b9290'],['Masonry block','🧱','#b7a99a'],['Roof shingles','🏠','#6e6266'],['Copper roof','🏠','#8a9b83'],['Brick stairs','🪜','#b76f5e'],['Stone stairs','🪜','#8e9694'],['Wood stairs','🪜','#b68b5d'],['Wood railing','🪵','#c59c6b'],['Stone pillar','🏛️','#c8c6b9'],['Wood pillar','🪵','#a17a53'],['Archway','🚪','#b8a187'],['Iron bars','▦','#777f83'],['Glass pane','🔹','#9fd9df'],['Dark glass','◼️','#526a73'],['Cobble edging','🪨','#888e88']
+]],['Nature+',[
+['Fern','🌿','#a8c69b'],['Clover patch','☘️','#83b56c'],['Blue flowers','🪻','#b7b4db'],['Lavender','🪻','#a79ac7'],['Wild daisies','🌼','#e5ddaa'],['Red flowers','🌺','#d99a8e'],['Berry bush','🫐','#71946b'],['Willow tree','🌳','#9cbf91'],['Birch tree','🌳','#b4c69a'],['Dead tree','🌲','#827968'],['Pine stump','🪵','#94734e'],['Fallen log','🪵','#8d674b'],['Autumn tree','🍂','#c58d59'],['Reed cluster','🌾','#a5ae77'],['Lily pads','🪷','#79ad84'],['Blue crystals','💎','#8dc8df'],['Rock formation','🪨','#888f8b'],['Pebble cluster','🪨','#a2a49b'],['Snow drift','❄️','#e2e7e7'],['Desert grass','🌾','#c4b16e']
+]],['Structures',[
+['Small cabin','🏡','#b99470'],['Stone cottage','🏠','#b9b4a5'],['Watchtower','🗼','#9d8a71'],['Wood bridge','🌉','#b18a60'],['Stone bridge','🌉','#9a9c96'],['Well','🪣','#aaa79a'],['Greenhouse','🏡','#a6c9b0'],['Gazebo','🏛️','#c6b89a'],['Stone wall','🧱','#9c9f97'],['Wood wall','🪵','#b38a5d'],['Low stone wall','🪨','#a8a69c'],['Wooden steps','🪜','#b68a5c'],['Camp tent','⛺','#b8a58b'],['Ruin column','🏛️','#a6a59a'],['Garden gate','🚪','#9eaa92'],['Hanging lantern','🏮','#d8c18a'],['Street lamp','💡','#b8b9a5'],['Stone marker','🪨','#a5a89e'],['Sign post','🪧','#b89b70'],['Portal frame','🌀','#817fa8']
+]]);
+/* Put a reliable Home button inside the immersive builder controls. */
+const homeReturn=document.createElement('button');homeReturn.className='btn secondary home-return';homeReturn.textContent='← Home';homeReturn.type='button';homeReturn.onclick=()=>showPage('home');document.querySelector('.build-controls').prepend(homeReturn);
+/* Terrain and floor pieces fill their entire voxel tile instead of looking like floating stickers. */
+renderTiles=function(){let pet=state.pets.find(p=>p.id===state.selectedPet),world=state.worlds[pet.id],biome=BIOMES[pet.biome],grid=document.getElementById('worldGrid');grid.style.background=biome.ground;const solidNames=new Set([...(ITEMS.find(x=>x[0]==='Blocks')||[null,[]])[1],...(ITEMS.find(x=>x[0]==='Floors')||[null,[]])[1],...(ITEMS.find(x=>x[0]==='Terrain+')||[null,[]])[1],...(ITEMS.find(x=>x[0]==='Wood + Build')||[null,[]])[1]].map(x=>x[0]));const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g);grid.innerHTML=world.tiles.map((t,i)=>{let it=t.item,color=it&&it.color&&it.color!=='transparent'?it.color:biome.ground,icon=it?it.icon:'',solid=it&&solidNames.has(it.name);return `<button class="tile ${solid?'solid-block block-'+slug(it.name):''}" aria-label="Tile ${i+1}${it?', '+it.name:''}" title="${it?it.name:'Empty tile'}" onclick="placeItem(${i})" style="--tilecolor:${color};background:${color}"><span class="deco" style="transform:rotate(${t.rot||0}deg)">${solid?'':icon}</span></button>`}).join('')+`<div class="pet-world-sprite" style="--pet-fur:${pet.rarity==='Legendary'?'#d6c4e9':pet.rarity==='Epic'?'#c5d4e4':pet.biome===2?'#c99a63':pet.biome===1?'#e2e8eb':pet.biome===7?'#9b6e60':'#b9a276'}" aria-label="${pet.name}, your pet"><div class="pet-shadow"></div><div class="pet-body"></div><div class="pet-head"><span class="pet-face">${pet.art}</span></div></div>`};
+/* Keep the realm animated and let the pet wander to the tile you tap. */
+const renderTilesBeforeLife=renderTiles;
+function ensureRealmLife(){const realm=document.getElementById('build');if(!realm||realm.querySelector('.realm-life'))return;const life=document.createElement('div');life.className='realm-life';life.setAttribute('aria-hidden','true');life.innerHTML='<i class="realm-cloud" style="--sky-y:13%;--cloud-speed:64s;--cloud-delay:-31s"></i><i class="realm-cloud cloud-small" style="--sky-y:24%;--cloud-speed:83s;--cloud-delay:-52s"></i><i class="realm-cloud" style="--sky-y:34%;--cloud-speed:73s;--cloud-delay:-18s"></i>'+Array.from({length:18},(_,i)=>`<i class="realm-mote" style="--mx:${4+(i*37)%92}%;--my:${35+(i*19)%55}%;--mote-speed:${5+(i%6)}s;--mote-delay:-${i%8}s"></i>`).join('');realm.appendChild(life)}
+function ensureCinematicAtmosphere(){const realm=document.getElementById('build');if(!realm||realm.querySelector('.cinema-atmosphere'))return;const layer=document.createElement('div');layer.className='cinema-atmosphere';layer.setAttribute('aria-hidden','true');layer.innerHTML='<div class="cinema-vignette"></div>'+Array.from({length:5},(_,i)=>`<i class="cinema-sunbeam" style="--beam-x:${8+i*19}%;--beam-angle:${-18+i*8}deg;--beam-delay:-${i*2}s"></i>`).join('')+Array.from({length:3},(_,i)=>`<i class="cinema-bird" style="--bird-y:${18+i*9}%;--bird-speed:${28+i*9}s;--bird-delay:-${i*13}s"></i>`).join('')+Array.from({length:16},(_,i)=>`<i class="cinema-leaf" style="--leaf-x:${(i*23)%100}%;--leaf-color:${['#d3b878','#91aa70','#b9c58a','#d9a17a'][i%4]};--leaf-speed:${12+i%9}s;--leaf-delay:-${i%12}s"></i>`).join('')+Array.from({length:14},(_,i)=>`<i class="cinema-glow" style="--glow-x:${(i*31)%97}%;--glow-y:${35+(i*17)%58}%;--glow-speed:${2+i%5}s;--glow-delay:-${i%6}s"></i>`).join('')+'<i class="cinema-ripple" style="--ripple-x:44%;--ripple-y:69%;--ripple-delay:-1s"></i><i class="cinema-ripple" style="--ripple-x:74%;--ripple-y:76%;--ripple-delay:-2.8s"></i>';realm.appendChild(layer)}
+renderTiles=function(){renderTilesBeforeLife();ensureRealmLife();ensureCinematicAtmosphere();const pet=state.pets.find(p=>p.id===state.selectedPet),world=pet&&state.worlds[pet.id],sprite=document.querySelector('#worldGrid .pet-world-sprite');if(!sprite||!world)return;const cols=window.matchMedia('(max-width:700px)').matches?12:16,rows=Math.ceil(world.tiles.length/cols),idx=Math.max(0,Math.min(world.tiles.length-1,Number.isInteger(world.petTile)?world.petTile:118)),x=idx%cols,y=Math.floor(idx/cols);sprite.style.left=((x+.5)/cols*100)+'%';sprite.style.top=((y+.5)/rows*100)+'%';if(world.petWalking){sprite.classList.add('pet-walking');window.setTimeout(()=>sprite.classList.remove('pet-walking'),650);world.petWalking=false;save()}};
+window.addEventListener('resize',()=>{if(document.getElementById('appRoot').classList.contains('immersive'))renderTiles()});
+const placeItemBeforeWander=placeItem;
+placeItem=function(i){const pet=state.pets.find(p=>p.id===state.selectedPet);if(pet&&state.worlds[pet.id]){state.worlds[pet.id].petTile=i;state.worlds[pet.id].petWalking=true}placeItemBeforeWander(i)};
+/* Portal travel. Keep the original navigation logic separate to prevent recursive calls. */
+function ordinaryShowPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  document.getElementById('appRoot').classList.toggle('immersive',id==='build');
+  if(id==='build')renderBuilder();
+  if(id==='pets')renderPets();
+  if(id==='home')renderHome();
+  window.scrollTo({top:0,behavior:'auto'});
+}
+let transferBusy=false;
+function showPage(id){
+  if(id!=='build'){ordinaryShowPage(id);return;}
+  if(transferBusy){ordinaryShowPage(id);return;}
+  transferBusy=true;
+  let overlay;
+  try{
+    /* Render the real destination first, then cover it while the portal opens. */
+    ordinaryShowPage('build');
+    const realm=document.getElementById('build');
+    realm.classList.remove('realm-arrival');
+    overlay=document.createElement('div');
+    overlay.className='world-transfer';
+    overlay.innerHTML='<div class="streaks"></div><div class="portal-ring"></div><div class="portal-core"></div><div class="transfer-label">Entering another world</div>';
+    document.body.appendChild(overlay);
+    requestAnimationFrame(()=>overlay?.classList.add('active'));
+    window.setTimeout(()=>{
+      realm.classList.add('realm-arrival');
+      overlay?.classList.remove('active');
+      window.setTimeout(()=>{
+        overlay?.remove();
+        realm.classList.remove('realm-arrival');
+        transferBusy=false;
+      },500);
+    },1400);
+  }catch(error){
+    overlay?.remove();
+    transferBusy=false;
+    ordinaryShowPage('build');
+  }
+}
+safeLoad();renderHome();renderPets();renderBuilder();renderBiomes();
+
+/* Free-roaming explorer controls: keyboard, touch pad, flight, and a loyal pet follower. */
+const roamingStyle=document.createElement('style');
+roamingStyle.textContent=`
+.realm-player{position:absolute;z-index:8;width:clamp(38px,5vw,64px);height:clamp(48px,6vw,76px);display:grid;place-items:center;font-size:clamp(32px,4.4vw,56px);line-height:1;pointer-events:none;filter:drop-shadow(0 8px 5px #091b2b99);transform:translate(-50%,-70%);transition:left .17s linear,top .17s linear;will-change:left,top}
+.realm-player .player-glow{position:absolute;inset:10%;border-radius:50%;background:#ffe7a955;filter:blur(12px);z-index:-1}
+.realm-player.flying{transform:translate(-50%,-115%);filter:drop-shadow(0 15px 5px #091b2b88) drop-shadow(0 0 13px #fbe6a8);animation:flyBob .7s ease-in-out infinite alternate}
+@keyframes flyBob{to{translate:0 -9px}}
+.realm-player.flying:after{content:'✦';position:absolute;left:50%;top:-15px;color:#fff0a8;font-size:20px;text-shadow:0 0 14px #fff}
+.realm-move-pad{position:absolute;z-index:12;left:18px;bottom:82px;display:grid;grid-template-columns:42px 42px 42px;grid-template-rows:42px 42px 42px;gap:4px;padding:7px;border-radius:17px;background:#10223dcc;border:1px solid #ffffff50;backdrop-filter:blur(12px)}
+.realm-move-pad button{border:1px solid #b7d7e455;border-radius:11px;background:#29445add;color:#fff;font-size:19px;font-weight:900;touch-action:manipulation}.realm-move-pad button:active{background:#f1d58c;color:#24313b}
+.realm-move-pad [data-dir="up"]{grid-column:2;grid-row:1}.realm-move-pad [data-dir="left"]{grid-column:1;grid-row:2}.realm-move-pad [data-dir="down"]{grid-column:2;grid-row:2}.realm-move-pad [data-dir="right"]{grid-column:3;grid-row:2}.realm-move-pad .flight-toggle{grid-column:1/4;grid-row:3;font-size:12px;letter-spacing:.3px}
+.realm-move-pad .flight-toggle.on{background:#e8cf82;color:#26313a;border-color:#fff0b0}
+.realm-controls-hint{position:absolute;z-index:11;left:18px;bottom:228px;color:#fff;background:#10223dbb;border:1px solid #ffffff40;border-radius:11px;padding:8px 11px;font-size:11px;backdrop-filter:blur(10px)}
+@media(max-width:700px){.realm-move-pad{left:9px;bottom:80px;grid-template-columns:38px 38px 38px;grid-template-rows:38px 38px 38px}.realm-controls-hint{left:9px;bottom:216px;font-size:10px}.app.immersive .world-actions{left:auto;right:9px;transform:none;bottom:9px;max-width:calc(100vw - 180px);overflow-x:auto}}
+`;
+document.head.appendChild(roamingStyle);
+let flyingMode=false;
+function realmWorld(){const p=state.pets.find(p=>p.id===state.selectedPet);return p&&state.worlds[p.id]}
+function realmDimensions(){return {cols:window.matchMedia('(max-width:700px)').matches?12:16,rows:Math.ceil((realmWorld()?.tiles.length||160)/(window.matchMedia('(max-width:700px)').matches?12:16))}}
+function addRoamingControls(){const realm=document.getElementById('build');if(!realm||realm.querySelector('.realm-move-pad'))return;const hint=document.createElement('div');hint.className='realm-controls-hint';hint.innerHTML='MOVE <b>W A S D</b> / <b>ARROWS</b> · FLY <b>SPACE</b>';realm.appendChild(hint);const pad=document.createElement('div');pad.className='realm-move-pad';pad.innerHTML='<button data-dir="up" aria-label="Move forward">▲</button><button data-dir="left" aria-label="Move left">◀</button><button data-dir="down" aria-label="Move backward">▼</button><button data-dir="right" aria-label="Move right">▶</button><button class="flight-toggle" type="button">✧ TAKE FLIGHT · SPACE</button>';pad.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>moveExplorer(b.dataset.dir)));pad.querySelector('.flight-toggle').addEventListener('click',toggleFlight);realm.appendChild(pad);}
+function positionRealmActor(){const w=realmWorld();if(!w)return;const grid=document.getElementById('worldGrid');if(!grid)return;const {cols,rows}=realmDimensions();const max=w.tiles.length-1;w.playerTile=Math.max(0,Math.min(max,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,max)));if(!Number.isInteger(w.petTile))w.petTile=Math.max(0,w.playerTile-1);let actor=grid.querySelector('.realm-player');if(!actor){actor=document.createElement('div');actor.className='realm-player';actor.innerHTML='<span class="player-glow"></span><span class="player-art">🧭</span>';actor.setAttribute('aria-label','Your explorer');grid.appendChild(actor)}actor.style.left=((w.playerTile%cols+.5)/cols*100)+'%';actor.style.top=((Math.floor(w.playerTile/cols)+.5)/rows*100)+'%';actor.classList.toggle('flying',flyingMode);actor.querySelector('.player-art').textContent=flyingMode?'🧙':'🧭';const pet=grid.querySelector('.pet-world-sprite');if(pet){pet.style.left=((w.petTile%cols+.5)/cols*100)+'%';pet.style.top=((Math.floor(w.petTile/cols)+.5)/rows*100)+'%';pet.classList.toggle('pet-walking',w.petTile!==w.playerTile)}addRoamingControls();const toggle=document.querySelector('.realm-move-pad .flight-toggle');if(toggle){toggle.classList.toggle('on',flyingMode);toggle.textContent=flyingMode?'✦ FLYING · SPACE TO LAND':'✧ TAKE FLIGHT · SPACE'} }
+const renderTilesForRoaming=renderTiles;
+renderTiles=function(){renderTilesForRoaming();positionRealmActor()};
+function moveExplorer(dir){const w=realmWorld();if(!w)return;const {cols,rows}=realmDimensions();let x=(Number.isInteger(w.playerTile)?w.playerTile:130)%cols,y=Math.floor((Number.isInteger(w.playerTile)?w.playerTile:130)/cols);if(dir==='up')y=Math.max(0,y-1);if(dir==='down')y=Math.min(rows-1,y+1);if(dir==='left')x=Math.max(0,x-1);if(dir==='right')x=Math.min(cols-1,x+1);const next=Math.min(w.tiles.length-1,y*cols+x);if(next===w.playerTile)return;w.petTile=Number.isInteger(w.playerTile)?w.playerTile:next;w.playerTile=next;save();positionRealmActor()}
+function toggleFlight(){flyingMode=!flyingMode;positionRealmActor();showToast(flyingMode?'You took flight! Use WASD or the arrows to soar.':'You landed safely.')}
+window.addEventListener('keydown',e=>{if(!document.getElementById('appRoot')?.classList.contains('immersive'))return;if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();const dirs={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};if(dirs[k]){e.preventDefault();moveExplorer(dirs[k])}else if(k===' '){e.preventDefault();toggleFlight()} });
+window.addEventListener('resize',()=>{if(document.getElementById('appRoot').classList.contains('immersive'))positionRealmActor()});
+const placeItemForRoaming=placeItem;
+placeItem=function(i){const w=realmWorld();if(w){w.petTile=Number.isInteger(w.playerTile)?w.playerTile:i;w.petWalking=true}placeItemForRoaming(i);positionRealmActor()};
+
+/* Make the controlled explorer visibly look like a person, not a moving compass icon. */
+const personAvatarStyle=document.createElement('style');
+personAvatarStyle.textContent=`
+.realm-player .player-art{position:relative;display:block;width:32px;height:44px;font-size:0!important;line-height:0;filter:drop-shadow(0 2px 2px #07152288)}
+.realm-player .player-art:before{content:'';position:absolute;left:10px;top:1px;width:12px;height:13px;border-radius:48% 48% 42% 42%;background:#efbd91;box-shadow:0 -4px 0 2px #4b3028,0 2px 0 1px #d99d73}
+.realm-player .player-art:after{content:'';position:absolute;left:9px;top:15px;width:14px;height:16px;border-radius:5px 5px 3px 3px;background:linear-gradient(90deg,#e4a93e,#ffd76a 45%,#e5a93f);box-shadow:-6px 5px 0 -3px #efbd91,6px 5px 0 -3px #efbd91,-3px 20px 0 -2px #354b70,3px 20px 0 -2px #354b70}
+.realm-player.flying .player-art:after{background:linear-gradient(90deg,#6e70bc,#c5baff 45%,#7778c4);box-shadow:-6px 5px 0 -3px #efbd91,6px 5px 0 -3px #efbd91,-3px 20px 0 -2px #354b70,3px 20px 0 -2px #354b70}
+.app.immersive .pet-world-sprite{visibility:visible!important;pointer-events:none!important}
+`;
+document.head.appendChild(personAvatarStyle);
+
+/* FIRST-PERSON EXPLORATION: the camera is the player; no tiny person marker. */
+const firstPersonStyle=document.createElement('style');
+firstPersonStyle.textContent=`
+.app.immersive #worldGrid{transform-origin:center center;will-change:transform;transition:transform .16s ease-out;}
+.app.immersive .world-wrap{overflow:hidden!important}
+.app.immersive .world-grid{inset:auto!important;left:0!important;top:0!important;width:160vw!important;height:160vh!important;grid-template-columns:repeat(16,minmax(0,1fr))!important;grid-template-rows:repeat(10,minmax(0,1fr))!important;transform-origin:top left!important}
+@media(max-width:700px){.app.immersive .world-grid{width:144vw!important;height:140vh!important;grid-template-columns:repeat(12,minmax(0,1fr))!important;grid-template-rows:repeat(14,minmax(0,1fr))!important}}
+.app.immersive .realm-player{display:none!important}
+.app.immersive .realm-controls-hint{left:50%;top:16px;bottom:auto;transform:translateX(-50%);white-space:nowrap;font-size:12px;background:#101d2ddd}
+.app.immersive .realm-move-pad{left:18px;bottom:22px;}
+.app.immersive .first-person-reticle{position:fixed;z-index:10;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);pointer-events:none;opacity:.9}
+.app.immersive .first-person-reticle:before,.app.immersive .first-person-reticle:after{content:'';position:absolute;background:#fff5d9;box-shadow:0 0 5px #152c36}
+.app.immersive .first-person-reticle:before{width:2px;height:18px;left:8px;top:0}.app.immersive .first-person-reticle:after{height:2px;width:18px;left:0;top:8px}
+.app.immersive .first-person-hands{position:fixed;z-index:9;left:50%;bottom:-14px;transform:translateX(-50%);width:min(440px,70vw);height:125px;pointer-events:none;filter:drop-shadow(0 -8px 12px #101d2844)}
+.app.immersive .first-person-hands:before{content:'';position:absolute;left:10%;bottom:-30px;width:38%;height:135px;border-radius:48% 48% 0 0;background:linear-gradient(90deg,#b77953,#edbd8f 45%,#d99b71);transform:rotate(19deg);border:5px solid #eac09a}
+.app.immersive .first-person-hands:after{content:'';position:absolute;right:10%;bottom:-30px;width:38%;height:135px;border-radius:48% 48% 0 0;background:linear-gradient(90deg,#d99b71,#edbd8f 55%,#b77953);transform:rotate(-19deg);border:5px solid #eac09a}
+@media(max-width:700px){.app.immersive .realm-controls-hint{top:57px;font-size:10px}.app.immersive .realm-move-pad{left:9px;bottom:18px}.app.immersive .first-person-hands{height:82px;width:76vw}}
+`;
+document.head.appendChild(firstPersonStyle);
+function ensureFirstPersonOverlay(){const realm=document.getElementById('build');if(!realm)return;if(!realm.querySelector('.first-person-reticle')){const reticle=document.createElement('div');reticle.className='first-person-reticle';reticle.setAttribute('aria-hidden','true');realm.appendChild(reticle)}if(!realm.querySelector('.first-person-hands')){const hands=document.createElement('div');hands.className='first-person-hands';hands.setAttribute('aria-hidden','true');realm.appendChild(hands)}}
+function positionRealmActor(){const w=realmWorld();if(!w)return;const grid=document.getElementById('worldGrid');if(!grid)return;const cols=realmDimensions().cols,rows=realmDimensions().rows;const max=w.tiles.length-1;w.playerTile=Math.max(0,Math.min(max,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,max)));if(!Number.isInteger(w.petTile))w.petTile=Math.max(0,w.playerTile-1);const x=w.playerTile%cols,y=Math.floor(w.playerTile/cols),mapW=cols===12?144:160,mapH=cols===12?140:160;const cellW=mapW/cols,cellH=mapH/rows;grid.style.transform='translate3d(calc(50vw - '+(x+.5)*cellW+'vw),calc(50vh - '+(y+.5)*cellH+'vh),0)';grid.querySelector('.realm-player')?.remove();const pet=grid.querySelector('.pet-world-sprite');if(pet){pet.style.left=((w.petTile%cols+.5)/cols*100)+'%';pet.style.top=((Math.floor(w.petTile/cols)+.5)/rows*100)+'%'}addRoamingControls();ensureFirstPersonOverlay();const toggle=document.querySelector('.realm-move-pad .flight-toggle');if(toggle){toggle.classList.toggle('on',flyingMode);toggle.textContent=flyingMode?'✦ FLYING · SPACE TO LAND':'✧ TAKE FLIGHT · SPACE'}}
+function moveExplorer(dir){const w=realmWorld();if(!w)return;const {cols,rows}=realmDimensions();let current=Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1);let x=current%cols,y=Math.floor(current/cols);if(dir==='up')y=Math.max(0,y-1);if(dir==='down')y=Math.min(rows-1,y+1);if(dir==='left')x=Math.max(0,x-1);if(dir==='right')x=Math.min(cols-1,x+1);const next=Math.min(w.tiles.length-1,y*cols+x);if(next===current){showToast('You reached the edge of this world. Turn and explore another direction.');return}w.petTile=current;w.playerTile=next;save();positionRealmActor()}
+/* Keep keyboard controls reliable even after clicking a tile or UI control. */
+document.getElementById('build')?.setAttribute('tabindex','0');
+document.getElementById('build')?.addEventListener('pointerdown',()=>document.getElementById('build')?.focus({preventScroll:true}));
+
+/* FIRST-PERSON CAMERA UPGRADE: turn the view, move relative to facing, remove hands. */
+let cameraFacing=0;
+const turningStyle=document.createElement('style');
+turningStyle.textContent=`
+.app.immersive .first-person-hands{display:none!important}
+.app.immersive .world-grid{transition:transform .18s ease-out!important}
+.realm-turn-controls{position:fixed;z-index:15;right:18px;bottom:22px;display:flex;gap:8px}
+.realm-turn-controls button{width:48px;height:48px;border:1px solid #d8e8f477;border-radius:13px;background:#10223ddd;color:#fff;font-size:23px;font-weight:900;box-shadow:0 5px 18px #06122566;touch-action:manipulation}
+.realm-turn-controls button:active{background:#f1d58c;color:#24313b;transform:scale(.96)}
+.app.immersive .realm-controls-hint{max-width:calc(100vw - 30px);text-align:center}
+@media(max-width:700px){.realm-turn-controls{right:9px;bottom:18px;gap:5px}.realm-turn-controls button{width:40px;height:40px}.app.immersive .realm-move-pad{bottom:68px}}
+`;
+document.head.appendChild(turningStyle);
+function ensureTurnControls(){const realm=document.getElementById('build');if(!realm||realm.querySelector('.realm-turn-controls'))return;const controls=document.createElement('div');controls.className='realm-turn-controls';controls.innerHTML='<button type="button" data-turn="left" aria-label="Turn left" title="Turn left (Q)">↶</button><button type="button" data-turn="right" aria-label="Turn right" title="Turn right (E)">↷</button>';controls.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>turnCamera(b.dataset.turn==='left'?-1:1)));realm.appendChild(controls)}
+function turnCamera(direction){cameraFacing=(cameraFacing+direction+4)%4;window.realmFacing=['up','right','down','left'][cameraFacing];positionRealmActor();showToast(['Facing north','Facing east','Facing south','Facing west'][cameraFacing])}
+positionRealmActor=function(){const w=realmWorld();if(!w)return;const grid=document.getElementById('worldGrid');if(!grid)return;const cols=realmDimensions().cols,rows=realmDimensions().rows;const max=w.tiles.length-1;w.playerTile=Math.max(0,Math.min(max,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,max)));if(!Number.isInteger(w.petTile))w.petTile=Math.max(0,w.playerTile-1);const x=w.playerTile%cols,y=Math.floor(w.playerTile/cols),mapW=cols===12?144:160,mapH=cols===12?140:160,cellW=mapW/cols,cellH=mapH/rows;grid.style.transform='translate3d(50vw,50vh,0) rotate('+(cameraFacing*90)+'deg) translate3d(-'+((x+.5)*cellW)+'vw,-'+((y+.5)*cellH)+'vh,0)';const pet=grid.querySelector('.pet-world-sprite');if(pet){pet.style.left=((w.petTile%cols+.5)/cols*100)+'%';pet.style.top=((Math.floor(w.petTile/cols)+.5)/rows*100)+'%'}addRoamingControls();ensureFirstPersonOverlay();ensureTurnControls();const toggle=document.querySelector('.realm-move-pad .flight-toggle');if(toggle){toggle.classList.toggle('on',flyingMode);toggle.textContent=flyingMode?'✦ FLYING · SPACE TO LAND':'✧ TAKE FLIGHT · SPACE'} };
+moveExplorer=function(dir){const w=realmWorld();if(!w)return;const {cols,rows}=realmDimensions();let current=Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1),x=current%cols,y=Math.floor(current/cols);const vectors={up:[0,-1],right:[1,0],down:[0,1],left:[-1,0]};let [dx,dy]=vectors[dir]||[0,0];for(let i=0;i<cameraFacing;i++){const old=dx;dx=-dy;dy=old}x+=dx;y+=dy;if(x<0||x>=cols||y<0||y>=rows){showToast('Edge of the map — turn to explore another way.');return}const next=y*cols+x;if(next===current)return;w.petTile=current;w.playerTile=next;save();positionRealmActor()};
+window.addEventListener('keydown',e=>{if(!document.getElementById('appRoot')?.classList.contains('immersive'))return;if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();if(k==='q'){e.preventDefault();turnCamera(-1)}else if(k==='e'){e.preventDefault();turnCamera(1)}});
+/* Drag left/right on the world to look around, like a simple Minecraft touch camera. */
+let turnPointerX=null;document.getElementById('build')?.addEventListener('pointerdown',e=>{if(e.target.closest('button,.build-panel,.build-controls,.world-actions'))return;turnPointerX=e.clientX});document.getElementById('build')?.addEventListener('pointerup',e=>{if(turnPointerX===null)return;const delta=e.clientX-turnPointerX;turnPointerX=null;if(Math.abs(delta)>45)turnCamera(delta<0?1:-1)});
+const oldRenderForTurning=renderTiles;renderTiles=function(){oldRenderForTurning();positionRealmActor()};
+
+/* VOXEL ADVENTURE PASS: clearer movement, distinct biome palettes, and a pet that trails behind. */
+const voxelAdventureStyle=document.createElement('style');
+voxelAdventureStyle.textContent=`
+.app.immersive #build{isolation:isolate;transition:background .45s ease}
+.app.immersive #build.realm-biome-0{background:linear-gradient(#8bc7ee 0%,#d4e9bd 43%,#537e42 68%,#24452b 100%)!important}
+.app.immersive #build.realm-biome-1{background:linear-gradient(#172e53 0%,#8ac9ec 43%,#e6f8ff 68%,#9ac8df 100%)!important}
+.app.immersive #build.realm-biome-2{background:linear-gradient(#5d9bc8 0%,#f4d89a 43%,#d5a653 68%,#986b3d 100%)!important}
+.app.immersive #build.realm-biome-3{background:linear-gradient(#0a4264 0%,#168ca1 44%,#1bc2c0 70%,#07516a 100%)!important}
+.app.immersive #build.realm-biome-4{background:linear-gradient(#17204f 0%,#6869bd 43%,#b2a9ef 68%,#7160b0 100%)!important}
+.app.immersive #build.realm-biome-5{background:linear-gradient(#f8a9d1 0%,#ffd9ec 43%,#ed91bd 68%,#a9538a 100%)!important}
+.app.immersive #build.realm-biome-6{background:linear-gradient(#0e1935 0%,#373c75 43%,#6868a0 68%,#252846 100%)!important}
+.app.immersive #build.realm-biome-7{background:linear-gradient(#341b27 0%,#a94e42 43%,#e47a42 68%,#35232d 100%)!important}
+.app.immersive .world-grid{filter:saturate(1.08)}
+.app.immersive .tile.realm-ground{border:1px solid #0b1b1b26!important;box-shadow:inset 0 3px #ffffff1c,inset 0 -8px #00000020!important}
+.app.immersive .tile.realm-ground:after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.22;background-image:linear-gradient(135deg,#fff 0 1px,transparent 1px 50%,#000 50% 52%,transparent 52%);background-size:13px 13px}
+.app.immersive .realm-biome-0 .tile.realm-ground{background:linear-gradient(145deg,#8fca67,#4d8b4b 72%,#34683d)!important}
+.app.immersive .realm-biome-1 .tile.realm-ground{background:linear-gradient(145deg,#f6fdff,#b8e1f4 70%,#82bad6)!important}
+.app.immersive .realm-biome-2 .tile.realm-ground{background:linear-gradient(145deg,#f6d995,#d6a855 70%,#a97840)!important}
+.app.immersive .realm-biome-3 .tile.realm-ground{background:linear-gradient(145deg,#44d5d0,#168b9c 70%,#086174)!important}
+.app.immersive .realm-biome-4 .tile.realm-ground{background:linear-gradient(145deg,#d8d0ff,#9c91e5 70%,#6659ad)!important}
+.app.immersive .realm-biome-5 .tile.realm-ground{background:linear-gradient(145deg,#ffd4e8,#f09ac8 70%,#bf679f)!important}
+.app.immersive .realm-biome-6 .tile.realm-ground{background:linear-gradient(145deg,#7777a9,#42446f 70%,#292d4d)!important}
+.app.immersive .realm-biome-7 .tile.realm-ground{background:linear-gradient(145deg,#6c4145,#4b303b 70%,#281f2b)!important}
+.app.immersive .realm-biome-7 .tile.realm-ground:nth-child(5n):after{background:linear-gradient(135deg,#ffb24d,#e75c36 45%,transparent 48%);opacity:.7}
+.app.immersive .realm-biome-3 .tile.realm-ground:nth-child(3n):after{background:radial-gradient(ellipse at 30% 30%,#c3ffff,transparent 48%);opacity:.65}
+.app.immersive .realm-biome-1 .tile.realm-ground:nth-child(4n):after{background:linear-gradient(135deg,#fff,transparent 55%);opacity:.7}
+.app.immersive .realm-biome-4 .tile.realm-ground:nth-child(5n):after,.app.immersive .realm-biome-6 .tile.realm-ground:nth-child(5n):after{background:radial-gradient(circle at 30% 30%,#fff,transparent 35%);opacity:.75}
+.realm-move-pad{grid-template-rows:42px 42px 42px 38px!important}
+.realm-move-pad .flight-toggle{grid-column:1/4!important;grid-row:3!important}
+.realm-move-pad .sprint-toggle{grid-column:1/3;grid-row:4;background:#315e45;color:#fff;border:1px solid #b7d7e455;border-radius:10px;font-size:11px;font-weight:900;touch-action:manipulation}
+.realm-move-pad .jump-button{grid-column:3;grid-row:4;background:#6659a8;color:#fff;border:1px solid #b7d7e455;border-radius:10px;font-size:11px;font-weight:900;touch-action:manipulation}
+.realm-controls-hint{font-weight:800;letter-spacing:.2px}
+.realm-controls-hint:after{content:'  ·  Q/E TURN  ·  SHIFT SPRINT';color:#ffe7a0}
+.app.immersive .pet-world-sprite{z-index:8;filter:drop-shadow(0 12px 5px #071b1caa) drop-shadow(0 0 10px #ffffff44)!important}
+.app.immersive .pet-world-sprite.pet-walking{animation:petTrailBounce .22s ease-in-out infinite alternate!important}
+@keyframes petTrailBounce{to{translate:0 -7px;rotate:3deg}}
+.app.immersive #worldGrid.jumping{animation:cameraJump .38s cubic-bezier(.3,.8,.4,1)}
+@keyframes cameraJump{0%{translate:0 0}40%{translate:0 -28px}100%{translate:0 0}}
+/* FIRST-PERSON HORIZON PASS: push the walkable ground into perspective so it no longer fills the camera like a wall. */
+.app.immersive #build{perspective:1100px;perspective-origin:50% 54%;background-image:linear-gradient(180deg,#8fc8ed 0%,#c9e2e8 35%,#c7d7a0 54%,#537b49 72%,#1d3829 100%)!important}
+.app.immersive #build:before{background:radial-gradient(ellipse at 78% 16%,#fff3c8 0 2%,#ffe6a555 3%,transparent 13%),linear-gradient(180deg,#a6d7f222 0%,transparent 35%,#244b2b22 54%,#0b211c44 100%);z-index:1}
+.app.immersive #build:after{z-index:2;opacity:.3;pointer-events:none}
+.app.immersive #worldGrid.world-grid{inset:auto 0 -12vh;height:88vh;transform:perspective(1100px) rotateX(48deg) scale(1.28);transform-origin:50% 100%;transform-style:preserve-3d;overflow:visible;z-index:3;grid-template-rows:repeat(10,minmax(0,1fr));background:linear-gradient(180deg,transparent 0%,#a8c88712 30%,#426e3c66 100%)!important}
+.app.immersive #worldGrid .tile{font-size:clamp(12px,1.7vw,25px);border:1px solid #13271c20;transition:background .2s,filter .2s;}
+.app.immersive #worldGrid .tile.realm-ground{background:linear-gradient(180deg,#83b95b 0%,#60934a 46%,#376a3e 100%)!important;box-shadow:inset 0 2px #d7f3a833,inset 0 -3px #0c291e40!important}
+.app.immersive #worldGrid .tile:nth-child(-n+32){background:linear-gradient(180deg,#9bcce522,#88bfa611)!important;border-color:#ffffff09}
+.app.immersive #worldGrid .tile:nth-child(n+33):nth-child(-n+64){background:linear-gradient(180deg,#9fcf9b22,#72a46a22)!important}
+.app.immersive #worldGrid .tile:nth-child(n+65):nth-child(-n+96){background:linear-gradient(180deg,#8ebc692e,#5c8d4a55)!important}
+.app.immersive #worldGrid .tile:nth-child(n+97){background:linear-gradient(180deg,#83b95b,#376a3e)!important}
+.app.immersive #worldGrid .tile .deco{font-size:clamp(13px,2vw,29px);filter:drop-shadow(0 3px 3px #071b1caa)}
+.app.immersive .realm-player{z-index:10;transform:translate(-50%,-100%) scale(.8)}
+.app.immersive .pet-world-sprite{z-index:9!important;transform:translate(-50%,-70%) scale(.72)!important}
+.app.immersive .realm-move-pad,.app.immersive .realm-controls-hint,.app.immersive .build-top,.app.immersive .world-actions,.app.immersive .world-banner,.app.immersive .world-hero{z-index:15}
+.app.immersive #worldGrid.jumping{animation:cameraJump .38s cubic-bezier(.3,.8,.4,1)}
+@media(max-width:700px){.app.immersive #worldGrid.world-grid{height:82vh;inset:auto 0 -9vh;transform:perspective(900px) rotateX(46deg) scale(1.22)}.realm-move-pad{grid-template-rows:38px 38px 38px 34px!important}.realm-controls-hint:after{content:' · Q/E TURN';}}
+`;
+document.head.appendChild(voxelAdventureStyle);
+let sprintMode=false;
+function decorateRealmBiome(){const pet=state.pets.find(p=>p.id===state.selectedPet),grid=document.getElementById('worldGrid'),realm=document.getElementById('build');if(!pet||!grid||!realm)return;for(let i=0;i<8;i++)realm.classList.remove('realm-biome-'+i);realm.classList.add('realm-biome-'+pet.biome);grid.querySelectorAll('.tile').forEach((tile,i)=>{tile.classList.toggle('realm-ground',!state.worlds[pet.id]?.tiles[i]?.item);tile.dataset.terrain=String(pet.biome)});}
+const renderTilesForVoxelAdventure=renderTiles;
+renderTiles=function(){renderTilesForVoxelAdventure();decorateRealmBiome();positionRealmActor()};
+const addRoamingControlsForAdventure=addRoamingControls;
+addRoamingControls=function(){addRoamingControlsForAdventure();const pad=document.querySelector('.realm-move-pad');if(!pad)return;if(!pad.querySelector('.sprint-toggle')){const sprint=document.createElement('button');sprint.className='sprint-toggle';sprint.type='button';sprint.textContent='🏃 WALK';sprint.addEventListener('click',()=>{sprintMode=!sprintMode;sprint.textContent=sprintMode?'⚡ SPRINT ON':'🏃 WALK';sprint.classList.toggle('on',sprintMode);showToast(sprintMode?'Sprint on — move faster!':'Walking pace restored.')});pad.appendChild(sprint)}if(!pad.querySelector('.jump-button')){const jump=document.createElement('button');jump.className='jump-button';jump.type='button';jump.textContent='⬆ JUMP';jump.addEventListener('click',()=>{const grid=document.getElementById('worldGrid');grid?.classList.remove('jumping');void grid?.offsetWidth;grid?.classList.add('jumping');setTimeout(()=>grid?.classList.remove('jumping'),420)});pad.appendChild(jump)}};
+const moveExplorerBeforeAdventure=moveExplorer;
+moveExplorer=function(dir){const w=realmWorld();if(!w)return;const old=w.playerTile;moveExplorerBeforeAdventure(dir);if(w.playerTile!==old){const grid=document.getElementById('worldGrid');if(sprintMode){const pet=grid?.querySelector('.pet-world-sprite');if(pet){pet.classList.add('pet-walking');setTimeout(()=>pet.classList.remove('pet-walking'),500)}}}};
+window.addEventListener('keydown',e=>{if(!document.getElementById('appRoot')?.classList.contains('immersive'))return;if(e.key==='Shift')sprintMode=true;if(e.key===' '&& !['BUTTON','INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName)){document.getElementById('worldGrid')?.classList.add('jumping');setTimeout(()=>document.getElementById('worldGrid')?.classList.remove('jumping'),420)}});
+window.addEventListener('keyup',e=>{if(e.key==='Shift')sprintMode=false});
+/* Always re-apply the active world's visual identity after changing pets or opening the realm. */
+const showPageForVoxelAdventure=showPage;
+showPage=function(id){showPageForVoxelAdventure(id);if(id==='build'){decorateRealmBiome();positionRealmActor()}};
+
+/* HIGH-IMPACT WORLD PASS: make terrain tiles read as distinct voxel materials and make flight change the camera/world, not just the avatar. */
+const highImpactWorldStyle=document.createElement('style');
+highImpactWorldStyle.textContent=`
+.app.immersive #build{overflow:hidden!important;background-color:#8ac7ed!important}
+.app.immersive #worldGrid.world-grid{transform-origin:50% 54%;transition:transform .22s ease,translate .22s ease,scale .22s ease!important;will-change:transform,translate,scale}
+.app.immersive #worldGrid .tile.realm-ground{position:relative;isolation:isolate;overflow:visible!important;border:1px solid #17251d66!important;box-shadow:inset 3px 3px #ffffff45,inset -4px -5px #00000032,0 2px 0 #101b1833!important;background-image:linear-gradient(135deg,#ffffff30 0 18%,transparent 19% 68%,#00000020 69% 100%),repeating-linear-gradient(0deg,#0000000b 0 2px,transparent 2px 7px)!important}
+.app.immersive #worldGrid .tile.realm-ground:before{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;background:linear-gradient(135deg,#ffffff2c 0 22%,transparent 23% 75%,#0000001e 76%);box-shadow:inset 0 0 0 2px #ffffff12}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+1){background-color:#6eaa4e!important;background-image:repeating-linear-gradient(45deg,#a9d77755 0 3px,#4e843b55 3px 7px),linear-gradient(135deg,#a2d66d,#477e3c)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+2){background-color:#98765a!important;background-image:repeating-linear-gradient(0deg,#543f2d44 0 2px,transparent 2px 8px),linear-gradient(135deg,#c5a17b,#6d4d3a)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+3){background-color:#858b8d!important;background-image:repeating-linear-gradient(135deg,#d8e0df55 0 2px,#59616555 2px 6px),linear-gradient(135deg,#b7c0c0,#50585c)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+4){background-color:#c5a85c!important;background-image:radial-gradient(circle at 25% 28%,#fff3b866 0 2px,transparent 3px),radial-gradient(circle at 72% 67%,#72502d55 0 3px,transparent 4px),linear-gradient(135deg,#f2d17d,#a87939)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+5){background-color:#4c9e9a!important;background-image:repeating-linear-gradient(90deg,#a7ffff33 0 2px,transparent 2px 8px),linear-gradient(135deg,#71d1c4,#216d79)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n+6){background-color:#8172b4!important;background-image:repeating-linear-gradient(45deg,#f3e8ff33 0 2px,transparent 2px 8px),linear-gradient(135deg,#c2a9ed,#594a89)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(7n){background-color:#b55e50!important;background-image:repeating-linear-gradient(0deg,#ffb06a33 0 2px,transparent 2px 7px),linear-gradient(135deg,#e78c62,#773d43)!important}
+.app.immersive #worldGrid .tile.realm-ground:nth-child(11n):after{content:'';position:absolute;inset:12%;z-index:2;pointer-events:none;background:linear-gradient(135deg,#ffffffaa 0 12%,transparent 13% 70%,#00000055 71%);clip-path:polygon(0 0,100% 12%,86% 100%,12% 82%)}
+.app.immersive #worldGrid .tile .deco{position:relative;z-index:3;text-shadow:0 3px 3px #10201caa;filter:drop-shadow(2px 4px 2px #06120f88)!important}
+.app.immersive #build.flight-active{background-image:radial-gradient(ellipse at 18% 30%,#ffffff88 0 5%,transparent 15%),radial-gradient(ellipse at 80% 23%,#ffffff99 0 4%,transparent 14%),linear-gradient(180deg,#428bc7 0%,#b8e4fa 47%,#d9f2ff 65%,#7fa66c 100%)!important}
+.app.immersive #build.flight-active #worldGrid{filter:saturate(.95) brightness(1.08);}
+.app.immersive #build.flight-active .realm-player{filter:drop-shadow(0 0 15px #fff6a8);}
+.app.immersive .realm-move-pad .flight-toggle.on{background:linear-gradient(135deg,#f8df86,#9ce9ff)!important;color:#152e4a!important;box-shadow:0 0 22px #9ce9ff88!important}
+.app.immersive .flight-altitude-hud{position:fixed;z-index:16;top:96px;right:18px;padding:9px 13px;border:1px solid #ffffff88;border-radius:12px;background:#102c46bb;color:#fff;font:800 12px/1.4 system-ui;letter-spacing:.7px;box-shadow:0 5px 20px #12263a33;pointer-events:none}
+@media(max-width:700px){.app.immersive .flight-altitude-hud{top:90px;right:8px;font-size:10px;padding:7px 9px}}
+`;
+document.head.appendChild(highImpactWorldStyle);
+let flightAltitude=0;
+const positionBeforeHighImpact=positionRealmActor;
+positionRealmActor=function(){positionBeforeHighImpact();const realm=document.getElementById('build'),grid=document.getElementById('worldGrid');if(!realm||!grid)return;realm.classList.toggle('flight-active',flyingMode);grid.style.translate='0 '+(flyingMode?Math.max(0,flightAltitude)*-1.2+'vh':'0');grid.style.scale=flyingMode?(1-Math.min(flightAltitude,5)*.035).toFixed(3):'1';if(!realm.querySelector('.flight-altitude-hud')){const hud=document.createElement('div');hud.className='flight-altitude-hud';realm.appendChild(hud)}const hud=realm.querySelector('.flight-altitude-hud');hud.style.display=flyingMode?'block':'none';hud.textContent='✦ FLIGHT ALTITUDE  '+(flightAltitude+1)+' / 6  ·  R UP / F DOWN';};
+const toggleFlightBeforeHighImpact=toggleFlight;
+toggleFlight=function(){if(!flyingMode)flightAltitude=1;else flightAltitude=0;toggleFlightBeforeHighImpact();positionRealmActor()};
+window.addEventListener('keydown',e=>{if(!document.getElementById('appRoot')?.classList.contains('immersive')||!flyingMode)return;if(['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;const k=e.key.toLowerCase();if(k==='r'||k==='f'){e.preventDefault();flightAltitude=Math.max(0,Math.min(5,flightAltitude+(k==='r'?1:-1)));if(flightAltitude===0){flyingMode=false;showToast('Landed safely.')}positionRealmActor();showToast(flyingMode?'Flight altitude '+(flightAltitude+1)+' of 6':'Landed safely.')}});
+/* BLOCK THEMES: a full gray voxel field with a palette for painting each individual block. */
+const blockThemeMaterials=[
+{id:'stone',name:'Stone',swatch:'#89939b',top:'linear-gradient(135deg,#b7c0c6,#727d86)',side:'#59636d'},
+{id:'grass',name:'Grass',swatch:'#64a94f',top:'linear-gradient(180deg,#8fd56b 0 24%,#5d9c45 24% 100%)',side:'#376b39'},
+{id:'dirt',name:'Dirt',swatch:'#9b6b45',top:'linear-gradient(135deg,#bd8b5c,#805336)',side:'#5e3d2c'},
+{id:'sand',name:'Sand',swatch:'#e5c778',top:'linear-gradient(135deg,#ffedaa,#c9a657)',side:'#9b793d'},
+{id:'ice',name:'Ice',swatch:'#8ee7f1',top:'linear-gradient(135deg,#e3ffff,#67c8ed)',side:'#3b94bd'},
+{id:'water',name:'Water',swatch:'#338ed8',top:'linear-gradient(135deg,#83e8ff,#2479cb)',side:'#164f9a'},
+{id:'crystal',name:'Crystal',swatch:'#a98aff',top:'linear-gradient(135deg,#f0caff,#8c6be8)',side:'#5142a3'},
+{id:'lava',name:'Lava',swatch:'#ed663c',top:'linear-gradient(135deg,#ffd56b,#e34a28)',side:'#8b2528'},
+{id:'wood',name:'Wood',swatch:'#b7814b',top:'repeating-linear-gradient(90deg,#d5a16a 0 7px,#a56a3d 7px 10px)',side:'#6f442b'},
+{id:'moss',name:'Moss',swatch:'#4e8764',top:'radial-gradient(circle at 25% 25%,#8ac77b 0 2px,transparent 3px),linear-gradient(135deg,#679d68,#35674e)',side:'#254c3c'}
+];
+let selectedBlockTheme='stone';
+const blockThemeStyle=document.createElement('style');
+blockThemeStyle.textContent=`
+.app.immersive #worldGrid.world-grid{gap:4px!important;padding:12px 14px 24px!important;background:transparent!important;overflow:visible!important;}
+.app.immersive #worldGrid .tile{position:relative!important;isolation:isolate!important;overflow:visible!important;border:1px solid #26323b!important;border-radius:2px!important;background:#89939b!important;box-shadow:inset 2px 2px #ffffff40,inset -3px -3px #00000035!important;}
+.app.immersive #worldGrid .tile:before{content:'';position:absolute;left:-1px;right:-1px;top:-8px;height:9px;background:var(--block-top,#b7c0c6);clip-path:polygon(0 100%,14% 0,100% 0,100% 100%);border-top:1px solid #ffffff55;z-index:0;}
+.app.immersive #worldGrid .tile:after{content:'';position:absolute;right:-8px;top:-5px;width:9px;height:calc(100% + 5px);background:var(--block-side,#59636d);clip-path:polygon(0 0,100% 12%,100% 100%,0 100%);border-right:1px solid #0005;z-index:0;}
+.app.immersive #worldGrid .tile.block-themed{background:var(--block-side,#59636d)!important;background-image:repeating-linear-gradient(0deg,transparent 0 15px,#ffffff0d 15px 17px),repeating-linear-gradient(90deg,transparent 0 18px,#0000000c 18px 20px)!important;}
+.app.immersive #worldGrid .tile.block-themed:before{background:var(--block-top,#b7c0c6)!important;}
+.app.immersive #worldGrid .tile.block-themed:after{background:var(--block-side,#59636d)!important;}
+.block-theme-toolbar{position:fixed;z-index:30;left:50%;top:74px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;max-width:min(94vw,950px);padding:8px 10px;border:1px solid #ffffff55;border-radius:15px;background:#17242bef;box-shadow:0 10px 30px #07131c55;overflow-x:auto;color:white;}
+.block-theme-toolbar .theme-label{font:900 10px/1.2 system-ui;letter-spacing:1px;white-space:nowrap;margin-right:4px;color:#d9e5ec;}
+.block-theme-button{flex:0 0 auto;display:flex;align-items:center;gap:5px;border:1px solid #ffffff2b;border-radius:9px;padding:7px 9px;background:#34434d;color:white;font:800 11px system-ui;cursor:pointer;}
+.block-theme-button .swatch{width:13px;height:13px;border-radius:3px;border:1px solid #ffffff66;box-shadow:inset 0 1px #ffffff66;}
+.block-theme-button.active{outline:2px solid #ffffff;outline-offset:1px;background:#526774;}
+.block-theme-hint{position:fixed;z-index:29;left:50%;top:128px;transform:translateX(-50%);padding:6px 10px;border-radius:8px;background:#17242bbd;color:#fff;font:700 11px system-ui;white-space:nowrap;pointer-events:none;}
+@media(max-width:700px){.block-theme-toolbar{top:68px;max-width:96vw;padding:6px;gap:4px}.block-theme-button{padding:7px;font-size:10px}.block-theme-toolbar .theme-label{display:none}.block-theme-hint{top:116px;font-size:10px}}
+`;
+document.head.appendChild(blockThemeStyle);
+function ensureBlockThemeData(){const defaults=['grass','ice','sand','water','crystal','crystal','moss','lava'];const alternates=['moss','stone','stone','sand','ice','sand','water','stone'];if(!state.realmTerrainMigration){Object.entries(state.worlds||{}).forEach(([id,world])=>{const pet=state.pets.find(p=>p.id===id),biome=pet?.biome??0,base=defaults[biome]||'grass',alt=alternates[biome]||'moss';(world.tiles||[]).forEach((tile,i)=>{if(!tile.theme||tile.theme==='stone')tile.theme=((i*7)%23===0)?alt:base;});});state.realmTerrainMigration=true;save()}const w=realmWorld();if(!w||!Array.isArray(w.tiles))return;const pet=state.pets.find(p=>p.id===state.selectedPet),base=defaults[pet?.biome??0]||'grass';w.tiles.forEach(t=>{if(!t.theme)t.theme=base;});}
+function paintBlockTheme(tile,themeId){const theme=blockThemeMaterials.find(t=>t.id===themeId)||blockThemeMaterials[0];tile.classList.add('block-themed');tile.dataset.blockTheme=theme.id;tile.style.setProperty('--block-top',theme.top);tile.style.setProperty('--block-side',theme.side);tile.style.backgroundColor=theme.side;tile.title=theme.name+' block · click to paint selected material';}
+function refreshBlockThemeToolbar(){const realm=document.getElementById('build');if(!realm)return;let bar=realm.querySelector('.block-theme-toolbar');if(!bar){bar=document.createElement('div');bar.className='block-theme-toolbar';bar.innerHTML='<span class="theme-label">BLOCK MATERIALS</span>'+blockThemeMaterials.map(t=>'<button type="button" class="block-theme-button" data-theme="'+t.id+'"><span class="swatch" style="background:'+t.swatch+'"></span>'+t.name+'</button>').join('');realm.appendChild(bar);bar.querySelectorAll('[data-theme]').forEach(btn=>btn.addEventListener('click',()=>{selectedBlockTheme=btn.dataset.theme;bar.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active',b===btn));showToast(selectedBlockTheme.charAt(0).toUpperCase()+selectedBlockTheme.slice(1)+' selected — click blocks to paint them.')}));}bar.querySelectorAll('[data-theme]').forEach(b=>b.classList.toggle('active',b.dataset.theme===selectedBlockTheme));let hint=realm.querySelector('.block-theme-hint');if(!hint){hint=document.createElement('div');hint.className='block-theme-hint';hint.textContent='Choose a material, then click any block to paint it';realm.appendChild(hint)}}
+function applyBlockThemes(){const w=realmWorld(),grid=document.getElementById('worldGrid'),realm=document.getElementById('build');if(!w||!grid||!realm)return;ensureBlockThemeData();grid.querySelectorAll('.tile').forEach((tile,i)=>{const data=w.tiles[i];if(!data)return;tile.classList.remove('realm-ground');paintBlockTheme(tile,data.theme||'stone');tile.onclick=(ev)=>{if(!realm.classList.contains('immersive')){placeItem(i);return}ev.preventDefault();ev.stopPropagation();const world=realmWorld();if(!world||!world.tiles[i])return;world.tiles[i].theme=selectedBlockTheme;save();applyBlockThemes();showToast(blockThemeMaterials.find(t=>t.id===selectedBlockTheme).name+' block placed.')}});refreshBlockThemeToolbar();}
+const renderTilesForBlockThemes=renderTiles;
+renderTiles=function(){renderTilesForBlockThemes();applyBlockThemes();positionRealmActor()};
+const showPageForBlockThemes=showPage;
+showPage=function(id){showPageForBlockThemes(id);if(id==='build'){applyBlockThemes();positionRealmActor()}};
+const positionForBlockThemes=positionRealmActor;
+positionRealmActor=function(){positionForBlockThemes();const realm=document.getElementById('build');if(realm&&realm.classList.contains('immersive'))applyBlockThemes()};
+window.addEventListener('resize',()=>{if(document.getElementById('appRoot')?.classList.contains('immersive')){applyBlockThemes();positionRealmActor()}});
+const blockThemeVisibility=document.createElement('style');blockThemeVisibility.textContent='.block-theme-toolbar,.block-theme-hint{display:none}.app.immersive .block-theme-toolbar{display:flex}.app.immersive .block-theme-hint{display:block}';document.head.appendChild(blockThemeVisibility);
+</script>
+<style id="connected-voxel-world-upgrade">
+/* Connected voxel terrain: remove the checkerboard gaps and make every tile share an edge. */
+.app.immersive #worldGrid.world-grid{gap:0!important;padding:22px 28px 38px!important;grid-template-columns:repeat(16,minmax(0,1fr))!important;grid-auto-rows:1fr;aspect-ratio:1.35;background:linear-gradient(#9fd9f5 0%,#c9eafa 35%,#b7d9ef 55%,#719b68 56%,#426a43 100%)!important;border-radius:0!important;box-shadow:none!important;}
+.app.immersive #worldGrid .tile{min-width:0;min-height:0;aspect-ratio:1!important;border-radius:0!important;border:1px solid #29374055!important;box-shadow:inset 1px 1px #ffffff20,inset -1px -2px #00000020!important;margin:0!important;z-index:1;}
+.app.immersive #worldGrid .tile:before{left:-1px!important;right:-1px!important;top:-9px!important;height:10px!important;clip-path:polygon(0 100%,0 18%,100% 0,100% 100%)!important;border-top:1px solid #ffffff55!important;}
+.app.immersive #worldGrid .tile:after{right:-9px!important;top:-5px!important;width:10px!important;height:calc(100% + 5px)!important;clip-path:polygon(0 0,100% 12%,100% 100%,0 100%)!important;}
+.app.immersive #worldGrid .tile.block-themed{background-color:var(--block-side,#59636d)!important;background-image:linear-gradient(135deg,#ffffff0d,transparent 48%),repeating-linear-gradient(0deg,transparent 0 19px,#0000000b 19px 20px)!important;}
+.app.immersive #worldGrid .tile.block-themed:before{background:var(--block-top,#b7c0c6)!important;}
+.app.immersive #worldGrid .tile.block-themed:after{background:var(--block-side,#59636d)!important;}
+.app.immersive #worldGrid .tile:hover{outline:2px solid #ffffffc9!important;outline-offset:-3px!important;z-index:5!important;filter:brightness(1.12);}
+@media(max-width:700px){.app.immersive #worldGrid.world-grid{grid-template-columns:repeat(12,minmax(0,1fr))!important;padding:18px 18px 30px!important;aspect-ratio:1.05}.app.immersive #worldGrid .tile:after{right:-6px!important;width:7px!important}.app.immersive #worldGrid .tile:before{top:-7px!important;height:8px!important}}
+</style>
+<style id="realm-canvas-engine-style">
+/* A real rendered scene replaces the confusing transparent tile buttons in exploration mode. */
+.app.immersive #worldGrid{display:block!important;overflow:hidden!important;perspective:none!important;transform:none!important;animation:none!important;background:transparent!important}
+.app.immersive #worldGrid>.tile,.app.immersive #worldGrid>.realm-player,.app.immersive #worldGrid>.pet-world-sprite{display:none!important;visibility:hidden!important;pointer-events:none!important}
+.realm-scene-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:2;touch-action:none;cursor:crosshair;outline:none}
+.app.immersive .realm-move-pad,.app.immersive .realm-controls-hint,.app.immersive .block-theme-toolbar,.app.immersive .block-theme-hint{z-index:25}
+.app.immersive .block-theme-hint{top:130px;background:#14231ee8;border:1px solid #ffffff24}
+.realm-mode-label{position:fixed;z-index:24;right:18px;bottom:78px;padding:9px 13px;border-radius:11px;background:#14231ee8;color:#f4f0df;border:1px solid #ffffff35;font:800 11px/1.4 system-ui;letter-spacing:.08em;pointer-events:none;box-shadow:0 8px 25px #0004}
+@media(max-width:700px){.realm-mode-label{right:8px;bottom:176px;font-size:10px}.app.immersive .block-theme-hint{top:118px}}
+</style>
+<script id="realm-canvas-engine">
+/* Self-contained isometric voxel scene: no external libraries or network required. */
+(()=>{
+ const root=document.getElementById('appRoot');let canvas,ctx,mode='block',raf=0,last=0,clouds=[],hitTiles=[],walkPhase=0;
+ const mats={stone:{top:'#9ca7aa',left:'#626f75',right:'#7c898e',edge:'#48545a'},grass:{top:'#76b951',left:'#4a7440',right:'#5d9347',edge:'#365b32'},dirt:{top:'#a97a50',left:'#68472f',right:'#825b3b',edge:'#503724'},sand:{top:'#e2c47a',left:'#a1844a',right:'#c0a35e',edge:'#88703e'},ice:{top:'#b9f0f1',left:'#5babc3',right:'#82d0df',edge:'#4b91a6'},water:{top:'#4eafe0',left:'#216caa',right:'#318dca',edge:'#1b5688'},crystal:{top:'#c6a4fa',left:'#6c52b0',right:'#9472d8',edge:'#514080'},lava:{top:'#ffb34d',left:'#a93c2c',right:'#df5a2e',edge:'#762b27'},wood:{top:'#bc8a56',left:'#704b30',right:'#94663b',edge:'#533a27'},moss:{top:'#6da778',left:'#365d48',right:'#4e805d',edge:'#284636'}};
+ const biomePalettes={forest:{sky1:'#82b8d5',sky2:'#d6e9df',far:'#789b87',ground:'#638c4b'},meadow:{sky1:'#83c4e8',sky2:'#e8f3ed',far:'#8ba978',ground:'#6fa64c'},ocean:{sky1:'#4d9ed1',sky2:'#d3f0ed',far:'#5d9b9c',ground:'#d5c27d'},desert:{sky1:'#7eb8dc',sky2:'#f4dfb0',far:'#b99a6b',ground:'#d8bb72'},ice:{sky1:'#8cc8e5',sky2:'#e9f7fa',far:'#a5c8d2',ground:'#d3e7e7'},volcano:{sky1:'#4a5968',sky2:'#a6a39a',far:'#5b5c55',ground:'#6d6257'},magic:{sky1:'#4c5c91',sky2:'#c6b8df',far:'#7e79a2',ground:'#6b8a75'}};
+ function palette(){const p=state?.pets?.find(x=>x.id===state.selectedPet);const b=p&&BIOMES[p.biome];const name=((b&&b.name)||'').toLowerCase();if(/ocean|sea|water|reef/.test(name))return biomePalettes.ocean;if(/desert|sand/.test(name))return biomePalettes.desert;if(/ice|snow|frost/.test(name))return biomePalettes.ice;if(/volcan|lava/.test(name))return biomePalettes.volcano;if(/magic|crystal|dream|fairy/.test(name))return biomePalettes.magic;if(/meadow|flower|grass/.test(name))return biomePalettes.meadow;return biomePalettes.forest}
+ function world(){return typeof realmWorld==='function'?realmWorld():null}
+ function dims(){const w=world(),cols=window.matchMedia('(max-width:700px)').matches?12:16;return {cols,rows:Math.ceil((w?.tiles?.length||160)/cols)}}
+ function ensure(){const grid=document.getElementById('worldGrid');if(!grid)return; if(!canvas||!canvas.isConnected){canvas=document.createElement('canvas');canvas.className='realm-scene-canvas';canvas.setAttribute('aria-label','Interactive isometric pet world. Click to build; use WASD or arrow keys to move.');grid.appendChild(canvas);ctx=canvas.getContext('2d');canvas.addEventListener('pointerdown',onSceneClick);canvas.addEventListener('contextmenu',e=>e.preventDefault());}
+ const realm=document.getElementById('build');if(realm&&!realm.querySelector('.realm-mode-label')){const label=document.createElement('div');label.className='realm-mode-label';realm.appendChild(label)}resize();}
+ function resize(){if(!canvas||!canvas.isConnected)return;const r=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);const w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}if(ctx)ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+ function poly(points,fill,stroke){ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=.8;ctx.stroke()}}
+ function cloud(x,y,s,alpha){ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle='#fff';ctx.shadowColor='#fff';ctx.shadowBlur=12*s;ctx.beginPath();ctx.ellipse(x,y,s*1.25,s*.27,0,0,Math.PI*2);ctx.ellipse(x-s*.35,y-s*.11,s*.5,s*.34,0,0,Math.PI*2);ctx.ellipse(x+s*.05,y-s*.2,s*.53,s*.42,0,0,Math.PI*2);ctx.ellipse(x+s*.48,y-s*.04,s*.42,s*.27,0,0,Math.PI*2);ctx.fill();ctx.restore()}
+ function draw(){if(!canvas||!canvas.isConnected||!ctx||!root?.classList.contains('immersive'))return;const W=canvas.clientWidth,H=canvas.clientHeight;if(W<2||H<2)return;const w=world();if(!w||!w.tiles)return;const {cols,rows}=dims();if(!w.__sceneTerrainInitialized){const allDefault=w.tiles.every(t=>!t.item&&(!t.theme||t.theme==='stone'));if(allDefault)w.tiles.forEach((t,i)=>{t.theme=i%29===0?'stone':i%13===0?'dirt':'grass'});w.__sceneTerrainInitialized=true;save()}const p=palette();ctx.clearRect(0,0,W,H);
+ // Atmospheric sky and distant layered hills.
+ const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,p.sky1);sky.addColorStop(.47,p.sky2);sky.addColorStop(.73,'#d7d6bd');sky.addColorStop(1,'#253b2d');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+ const sun=ctx.createRadialGradient(W*.76,H*.18,3,W*.76,H*.18,Math.min(W,H)*.28);sun.addColorStop(0,'#fff4c7aa');sun.addColorStop(.25,'#fff1c344');sun.addColorStop(1,'#fff1c300');ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);
+ cloud(W*.18+Math.sin(Date.now()/9000)*24,H*.18,Math.min(W,H)*.055,.74);cloud(W*.68+Math.sin(Date.now()/11000)*18,H*.27,Math.min(W,H)*.075,.58);cloud(W*.91,H*.12,Math.min(W,H)*.035,.5);
+ // Detailed mountain range: overlapping ridgelines, rock faces, snow caps and atmospheric distance.
+ const mountain=(cx,base,peakW,peakH,back,front,shade,snow)=>{
+   ctx.save();ctx.globalAlpha=.92;
+   ctx.beginPath();ctx.moveTo(cx-peakW,base);ctx.lineTo(cx-peakW*.43,base-peakH*.58);ctx.lineTo(cx-peakW*.18,base-peakH*.46);ctx.lineTo(cx,base-peakH);ctx.lineTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.38,base-peakH*.72);ctx.lineTo(cx+peakW,base);ctx.closePath();ctx.fillStyle=back;ctx.fill();
+   ctx.beginPath();ctx.moveTo(cx,base-peakH);ctx.lineTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.38,base-peakH*.72);ctx.lineTo(cx+peakW,base);ctx.lineTo(cx+peakW*.06,base);ctx.closePath();ctx.fillStyle=front;ctx.fill();
+   ctx.beginPath();ctx.moveTo(cx-peakW*.43,base-peakH*.58);ctx.lineTo(cx,base-peakH);ctx.lineTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.06,base-peakH*.53);ctx.lineTo(cx-peakW*.03,base-peakH*.7);ctx.lineTo(cx-peakW*.14,base-peakH*.5);ctx.closePath();ctx.fillStyle=snow;ctx.fill();
+   ctx.strokeStyle=shade;ctx.globalAlpha=.26;ctx.lineWidth=Math.max(1,peakW*.012);ctx.beginPath();ctx.moveTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.05,base-peakH*.31);ctx.lineTo(cx+peakW*.32,base-peakH*.12);ctx.moveTo(cx-peakW*.43,base-peakH*.58);ctx.lineTo(cx-peakW*.22,base-peakH*.24);ctx.stroke();ctx.restore();
+ };
+ const mountainBase=H*.64;
+ mountain(W*.13,mountainBase,W*.22,H*.34,'#8ba9ae','#647f86','#314c55',p.far==='#a5c8d2'?'#f4ffff':'#dce6e2');
+ mountain(W*.39,mountainBase+H*.025,W*.29,H*.43,'#9bb9bb','#6f8f91','#405d62',p.far==='#a5c8d2'?'#ffffff':'#e6ece6');
+ mountain(W*.72,mountainBase,W*.26,H*.37,'#91aeb0','#607d82','#354f57',p.far==='#a5c8d2'?'#f7ffff':'#e2e9e5');
+ mountain(W*.96,mountainBase+H*.015,W*.18,H*.29,'#a9c2bd','#7e9b91','#46625d',p.far==='#a5c8d2'?'#faffff':'#e7ece0');
+ // Low pine silhouettes break up the ridge line and establish scale.
+ for(let i=0;i<Math.ceil(W/48);i++){const tx=i*53+((i*19)%23),ty=H*(.605+((i*7)%5)*.008),sz=Math.min(W,H)*(.018+((i*3)%4)*.003);ctx.save();ctx.globalAlpha=.42;ctx.fillStyle=i%2?'#3e6253':'#456d5a';ctx.beginPath();ctx.moveTo(tx,ty-sz*2.2);ctx.lineTo(tx-sz*.8,ty);ctx.lineTo(tx+sz*.8,ty);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(tx,ty-sz*1.5);ctx.lineTo(tx-sz,ty+sz*.65);ctx.lineTo(tx+sz,ty+sz*.65);ctx.closePath();ctx.fill();ctx.restore();}
+ const player=Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1),px=player%cols,py=Math.floor(player/cols);const flight=!!flyingMode,altitude=typeof flightAltitude!=='undefined'?flightAltitude:0;const tw=Math.max(25,Math.min(76,W/(cols+rows)*2.05)),th=tw*.51,depth=Math.max(8,tw*.2);const camX=W*.5-(px-py)*tw/2,camY=H*.58-(px+py)*th/2+(flight?Math.min(5,altitude)*12:0);const project=(x,y)=>({x:camX+(x-y)*tw/2,y:camY+(x+y)*th/2});
+ // Soft fog and distant platform shadow.
+ ctx.save();ctx.globalAlpha=.18;ctx.fillStyle='#10291d';ctx.beginPath();ctx.ellipse(W*.5,H*.8,W*.42,H*.14,0,0,Math.PI*2);ctx.fill();ctx.restore();hitTiles=[];
+ const order=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const i=y*cols+x;if(i<w.tiles.length)order.push({x,y,i});}order.sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+ for(const t of order){const c=project(t.x,t.y),data=w.tiles[t.i]||{},id=data.theme||'grass',m=mats[id]||mats.grass;const elevated=data.item&&/block|cube|rock/i.test(data.item.name||'');const z=elevated?depth*.8:depth;const top=[{x:c.x,y:c.y-th/2-z},{x:c.x+tw/2,y:c.y-z},{x:c.x,y:c.y+th/2-z},{x:c.x-tw/2,y:c.y-z}];
+ // Left and right vertical faces make the terrain read as connected solid blocks.
+ poly([top[3],top[2],{x:top[2].x,y:top[2].y+depth},{x:top[3].x,y:top[3].y+depth}],m.left,m.edge);
+ poly([top[2],top[1],{x:top[1].x,y:top[1].y+depth},{x:top[2].x,y:top[2].y+depth}],m.right,m.edge);
+ poly(top,m.top,'#ffffff30');
+ // A few surface details add texture without making the floor noisy.
+ if(id==='grass'){ctx.save();ctx.globalAlpha=.24;ctx.strokeStyle='#d6f0a4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(c.x-tw*.12,c.y-th*.08-z);ctx.lineTo(c.x-tw*.03,c.y-th*.14-z);ctx.moveTo(c.x+tw*.12,c.y+th*.02-z);ctx.lineTo(c.x+tw*.19,c.y-th*.02-z);ctx.stroke();ctx.restore()}
+ if(id==='water'){ctx.save();ctx.strokeStyle='#d7ffff88';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(c.x-tw*.16,c.y-z);ctx.lineTo(c.x+tw*.02,c.y-th*.04-z);ctx.stroke();ctx.restore()}
+ if(data.item&&data.item.icon){ctx.save();ctx.font=`${Math.max(15,tw*.43)}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='#1b251b';ctx.shadowBlur=5;ctx.fillText(data.item.icon,c.x,c.y-th*.06-z-depth*.22);ctx.restore()}
+ hitTiles.push({i,points:top.map(v=>({x:v.x,y:v.y})),cx:c.x,cy:c.y});
+ }
+ // Atmospheric depth haze near the horizon.
+ const haze=ctx.createLinearGradient(0,H*.35,0,H*.66);haze.addColorStop(0,'#ffffff00');haze.addColorStop(1,'#dce7d477');ctx.fillStyle=haze;ctx.fillRect(0,H*.35,W,H*.31);
+ // Wildlife lives on the terrain rather than floating UI stickers. Draw compact shaded animal forms.
+ const petBiomeName=(((BIOMES[state?.pets?.find(q=>q.id===state.selectedPet)?.biome]||{}).name)||'forest').toLowerCase();
+ const wildlife=/ocean|sea|water|reef/.test(petBiomeName)?[{kind:'bird',coat:'#f3f1e7'},{kind:'fox',coat:'#e8a45d'}]:
+   /desert|sand/.test(petBiomeName)?[{kind:'fox',coat:'#d4a05f'},{kind:'rabbit',coat:'#c7b99e'}]:
+   /ice|snow|frost/.test(petBiomeName)?[{kind:'rabbit',coat:'#eef4f3'},{kind:'deer',coat:'#b8c6c4'}]:
+   /volcan|lava/.test(petBiomeName)?[{kind:'fox',coat:'#bd6944'},{kind:'bird',coat:'#555c62'}]:
+   /magic|crystal|dream|fairy/.test(petBiomeName)?[{kind:'deer',coat:'#bda8d7'},{kind:'rabbit',coat:'#e5dff0'}]:
+   [{kind:'deer',coat:'#9b7048'},{kind:'fox',coat:'#cf7941'},{kind:'rabbit',coat:'#b9ad97'},{kind:'bird',coat:'#e6e2d4'}];
+ function drawWildlife(c,animal,scale){
+   const s=scale;ctx.save();ctx.translate(c.x,c.y-th*.05);ctx.scale(s,s);
+   ctx.globalAlpha=.24;ctx.fillStyle='#17251b';ctx.beginPath();ctx.ellipse(0,th*.22,tw*.19,th*.09,0,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+   const coat=animal.coat;
+   if(animal.kind==='bird'){
+     ctx.fillStyle=coat;ctx.beginPath();ctx.ellipse(0,0,tw*.105,th*.12,-.2,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(-tw*.035,-th*.11,tw*.065,th*.065,0,0,Math.PI*2);ctx.fill();
+     ctx.fillStyle='#d49b43';ctx.beginPath();ctx.moveTo(tw*.025,-th*.11);ctx.lineTo(tw*.105,-th*.085);ctx.lineTo(tw*.025,-th*.065);ctx.closePath();ctx.fill();
+     ctx.strokeStyle='#514d43';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(-tw*.025,th*.08);ctx.lineTo(-tw*.03,th*.17);ctx.moveTo(tw*.025,th*.08);ctx.lineTo(tw*.03,th*.17);ctx.stroke();
+   }else{
+     ctx.fillStyle=coat;ctx.beginPath();ctx.ellipse(0,0,tw*.15,th*.17,-.12,0,Math.PI*2);ctx.fill();
+     ctx.beginPath();ctx.ellipse(tw*.115,-th*.11,tw*.09,th*.1,0,0,Math.PI*2);ctx.fill();
+     if(animal.kind==='rabbit'){ctx.beginPath();ctx.ellipse(tw*.09,-th*.25,tw*.027,th*.13,-.16,0,Math.PI*2);ctx.ellipse(tw*.15,-th*.245,tw*.027,th*.12,.18,0,Math.PI*2);ctx.fill();ctx.fillStyle='#d58e8b';ctx.beginPath();ctx.ellipse(tw*.09,-th*.25,tw*.009,th*.075,-.16,0,Math.PI*2);ctx.fill();}
+     if(animal.kind==='deer'){ctx.strokeStyle='#735238';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(tw*.13,-th*.2);ctx.lineTo(tw*.11,-th*.34);ctx.lineTo(tw*.07,-th*.39);ctx.moveTo(tw*.11,-th*.34);ctx.lineTo(tw*.15,-th*.4);ctx.moveTo(tw*.18,-th*.2);ctx.lineTo(tw*.2,-th*.34);ctx.lineTo(tw*.23,-th*.38);ctx.stroke();}
+     if(animal.kind==='fox'){ctx.fillStyle='#f2dfc1';ctx.beginPath();ctx.ellipse(tw*.18,-th*.08,tw*.06,th*.045,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.moveTo(tw*.18,-th*.12);ctx.lineTo(tw*.26,-th*.1);ctx.lineTo(tw*.18,-th*.07);ctx.closePath();ctx.fill();}
+     ctx.fillStyle='#f0e6d4';ctx.beginPath();ctx.ellipse(-tw*.15,th*.01,tw*.07,th*.06,.5,0,Math.PI*2);ctx.fill();
+     ctx.strokeStyle='#554638';ctx.lineWidth=Math.max(1,tw*.018);ctx.beginPath();ctx.moveTo(-tw*.09,th*.1);ctx.lineTo(-tw*.11,th*.2);ctx.moveTo(tw*.045,th*.1);ctx.lineTo(tw*.035,th*.2);ctx.moveTo(tw*.16,th*.04);ctx.lineTo(tw*.17,th*.17);ctx.stroke();
+     ctx.fillStyle='#2b2926';ctx.beginPath();ctx.arc(tw*.145,-th*.13,Math.max(1,tw*.014),0,Math.PI*2);ctx.fill();
+   }
+   ctx.restore();
+ }
+ let animalCount=0;
+ for(const t of order){if(animalCount>=7)break;const dx=t.x-px,dy=t.y-py;if(Math.abs(dx)+Math.abs(dy)<3)continue;if((t.i*17+11)%19!==0)continue;const c=project(t.x,t.y),animal=wildlife[(t.i*7+3)%wildlife.length];if(c.x<-30||c.x>W+30||c.y<H*.24||c.y>H*.88)continue;drawWildlife(c,animal,Math.max(.7,Math.min(1.18,tw/48)));animalCount++;}
+ // Pet companion and explorer are drawn in the same scene, so they move with the world camera.
+ function actor(tile,emoji,isPet){if(!Number.isInteger(tile))return;const x=tile%cols,y=Math.floor(tile/cols),c=project(x,y);const lift=flight&&!isPet?Math.min(5,altitude||1)*15:0;ctx.save();ctx.globalAlpha=.28;ctx.fillStyle='#14241a';ctx.beginPath();ctx.ellipse(c.x,c.y+depth+3,tw*.17,th*.12,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`${Math.max(26,tw*(isPet?.5:.58))}px system-ui`;ctx.shadowColor=isPet?'#fff0b5':'#14241c';ctx.shadowBlur=isPet?12:8;ctx.fillText(emoji,c.x,c.y-th*.3-lift);ctx.restore();}
+ const pet=state?.pets?.find(q=>q.id===state.selectedPet);actor(w.petTile,pet?.art||'🐾',true);actor(player,flight?'🧙':'🧍',false);
+ // On-screen crosshair/interaction prompt and mode label.
+ const label=document.querySelector('.realm-mode-label');if(label)label.textContent=mode==='block'?'BUILD MODE  ·  CLICK GROUND TO PLACE BLOCKS':'DECOR MODE  ·  CLICK GROUND TO PLACE ITEMS';
+ if(flight){ctx.save();ctx.strokeStyle='#fff8d899';ctx.setLineDash([5,7]);ctx.beginPath();ctx.ellipse(W*.5,H*.61,tw*.34,th*.18,0,0,Math.PI*2);ctx.stroke();ctx.restore()}
+ }
+ function inside(x,y,pts){let c=false;for(let i=0,j=pts.length-1;i<pts.length;j=i++){const a=pts[i],b=pts[j];if(((a.y>y)!==(b.y>y))&&(x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x))c=!c}return c}
+ function onSceneClick(e){if(!root?.classList.contains('immersive'))return;const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;let hit=null;for(let i=hitTiles.length-1;i>=0;i--){if(inside(x,y,hitTiles[i].points)){hit=hitTiles[i];break}}if(!hit)return;const w=world();if(!w||!w.tiles[hit.i])return;
+ if(e.button===2||mode==='block'){w.tiles[hit.i].theme=selectedBlockTheme||'grass';if(!w.tiles[hit.i].theme)w.tiles[hit.i].theme='grass';save();draw();if(typeof showToast==='function')showToast((String(selectedBlockTheme||'grass').replace(/^./,c=>c.toUpperCase()))+' block placed.');return}
+ if(typeof selectedItem!=='undefined'&&selectedItem){if(selectedItem[0]==='Eraser'){w.tiles[hit.i].item=null}else{w.tiles[hit.i].item={name:selectedItem[0],icon:selectedItem[1],color:selectedItem[2]}}save();draw();if(typeof showToast==='function')showToast('Item placed in your world.');}
+ }
+ // Keep the existing save/build UI, but render its world through the isometric scene.
+ const oldRenderTiles=window.renderTiles;window.renderTiles=function(){if(typeof oldRenderTiles==='function')oldRenderTiles();ensure();draw()};
+ const oldShowPage=window.showPage;window.showPage=function(id){if(typeof oldShowPage==='function')oldShowPage(id);if(id==='build'){ensure();requestAnimationFrame(()=>{resize();draw()})}};
+ const oldMove=window.moveExplorer;window.moveExplorer=function(dir){if(typeof oldMove==='function')oldMove(dir);draw()};
+ const oldToggle=window.toggleFlight;window.toggleFlight=function(){if(typeof oldToggle==='function')oldToggle();draw()};
+ document.addEventListener('click',e=>{if(e.target.closest('.block-theme-button')){mode='block';draw()}else if(e.target.closest('.build-item')){mode='item';draw()}},true);
+ window.addEventListener('resize',resize);window.addEventListener('keydown',e=>{if(!root?.classList.contains('immersive'))return;if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))requestAnimationFrame(draw)});
+ // Smooth ambient cloud drift and a reliable redraw after layout changes.
+ function loop(t){if(t-last>45){last=t;if(root?.classList.contains('immersive'))draw()}raf=requestAnimationFrame(loop)}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{ensure();raf=requestAnimationFrame(loop)});else{ensure();raf=requestAnimationFrame(loop)}
+})();
+</script>
+<script id="realm-movement-fix">
+/* Reliable movement controller: update the saved world position directly, then redraw the scene. */
+(()=>{
+ const root=document.getElementById('appRoot');
+ function move(dir){
+  if(!root?.classList.contains('immersive'))return;
+  const w=typeof realmWorld==='function'?realmWorld():null;
+  if(!w||!Array.isArray(w.tiles)||!w.tiles.length)return;
+  const cols=window.matchMedia('(max-width:700px)').matches?12:16,rows=Math.ceil(w.tiles.length/cols);
+  const current=Math.max(0,Math.min(w.tiles.length-1,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1)));
+  let dx=0,dy=0;const vectors={up:[0,-1],right:[1,0],down:[0,1],left:[-1,0]};[dx,dy]=vectors[dir]||[0,0];
+  for(let i=0;i<(typeof cameraFacing==='number'?cameraFacing:0);i++){const old=dx;dx=-dy;dy=old;}
+  const x=current%cols+dx,y=Math.floor(current/cols)+dy;
+  if(x<0||x>=cols||y<0||y>=rows){if(typeof showToast==='function')showToast('Edge of the world — turn to explore another way.');return;}
+  const next=y*cols+x;if(next===current)return;
+  w.petTile=current;w.playerTile=next;window.realmFacing=['up','right','down','left'][typeof cameraFacing==='number'?cameraFacing:0];
+  if(typeof save==='function')save();window.dispatchEvent(new Event('realm-world-updated'));
+ }
+ window.addEventListener('keydown',e=>{
+  if(!root?.classList.contains('immersive'))return;
+  if(e.ctrlKey||e.altKey||e.metaKey||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
+  const key=e.key.toLowerCase();
+  const dirs={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
+  if(dirs[key]){e.preventDefault();e.stopImmediatePropagation();move(dirs[key]);return;}
+  if(key===' '&&!['BUTTON','INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)){
+   e.preventDefault();e.stopImmediatePropagation();const flightButton=document.querySelector('.realm-move-pad .flight-toggle');if(flightButton)flightButton.click();
+  }
+ },true);
+ document.addEventListener('click',e=>{
+  const button=e.target.closest('.realm-move-pad [data-dir]');
+  if(button&&root?.classList.contains('immersive')){e.preventDefault();e.stopImmediatePropagation();move(button.dataset.dir)}
+ },true);
+})();
+</script>
+<style id="realm-realism-and-placement-fix">
+/* Clearer material faces and grounded shadows for the isometric voxel view. */
+.app.immersive .realm-scene-canvas{filter:contrast(1.045) saturate(.92);image-rendering:auto;touch-action:none}
+.app.immersive .realm-mode-label{left:50%;right:auto;bottom:76px;transform:translateX(-50%);background:#14231ee8;border-color:#d6d0b855;box-shadow:0 5px 20px #07100c55}
+@media(max-width:700px){.app.immersive .realm-mode-label{bottom:165px;max-width:90vw;text-align:center}}
+</style>
+<script id="realm-placement-reliability-fix">
+/* Reliable screen-to-tile picking. Left-click always places the selected inventory item;
+   right-click paints a terrain material. Solid materials render as voxel blocks, not emoji stickers. */
+(()=>{
+ const root=document.getElementById('appRoot');
+ const solidCategories=new Set(['Blocks','Floors','Terrain+','Wood + Build']);
+ function materialFor(item){
+  const name=String(item?.[0]||'').toLowerCase();
+  if(/grass|moss|fern|clover|meadow/.test(name))return 'grass';
+  if(/dirt|mud|clay|brick|soil/.test(name))return 'dirt';
+  if(/sand|desert|limestone/.test(name))return 'sand';
+  if(/snow|ice|frost|quartz/.test(name))return 'ice';
+  if(/water|pond|coral|prismarine/.test(name))return 'water';
+  if(/crystal|amethyst|glass|marble/.test(name))return 'crystal';
+  if(/lava|ember|basalt|obsidian/.test(name))return 'lava';
+  if(/wood|plank|log|timber|beam/.test(name))return 'wood';
+  if(/mossy/.test(name))return 'moss';
+  return 'stone';
+ }
+ function pickTile(e,canvas){
+  const w=typeof realmWorld==='function'?realmWorld():null;
+  if(!w?.tiles?.length)return null;
+  const rect=canvas.getBoundingClientRect(),W=rect.width,H=rect.height;
+  if(W<2||H<2)return null;
+  const cols=matchMedia('(max-width:700px)').matches?12:16,rows=Math.ceil(w.tiles.length/cols);
+  const player=Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1),px=player%cols,py=Math.floor(player/cols);
+  const tw=Math.max(25,Math.min(76,W/(cols+rows)*2.05)),th=tw*.51,depth=Math.max(8,tw*.2);
+  const flight=!!window.flyingMode,altitude=Number(window.flightAltitude)||0;
+  const camX=W*.5-(px-py)*tw/2,camY=H*.58-(px+py)*th/2+(flight?Math.min(5,altitude)*12:0);
+  const x=e.clientX-rect.left,y=e.clientY-rect.top;let best=-1,bestScore=Infinity;
+  for(let i=0;i<w.tiles.length;i++){
+   const tx=i%cols,ty=Math.floor(i/cols),cx=camX+(tx-ty)*tw/2,cy=camY+(tx+ty)*th/2-depth;
+   const score=Math.abs(x-cx)/(tw*.5)+Math.abs(y-(cy+depth*.24))/(th*.5+depth*.42);
+   if(score<bestScore){bestScore=score;best=i}
+  }
+  return bestScore<=2.15?best:null;
+ }
+ document.addEventListener('pointerdown',e=>{
+  const canvas=e.target.closest?.('.realm-scene-canvas');
+  if(!canvas||!root?.classList.contains('immersive'))return;
+  if(e.button!==0&&e.button!==2)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const w=typeof realmWorld==='function'?realmWorld():null,index=pickTile(e,canvas);
+  if(!w||index===null||index===undefined){if(typeof showToast==='function')showToast('Tap closer to a visible ground block.');return}
+  if(e.button===2){
+   const chosen=document.querySelector('.block-theme-button.active')?.dataset.theme||'grass';
+   w.tiles[index].theme=chosen;save();renderTiles();
+   if(typeof showToast==='function')showToast(chosen[0].toUpperCase()+chosen.slice(1)+' terrain painted.');return;
+  }
+  const item=typeof selectedItem!=='undefined'?selectedItem:null;
+  if(!item)return;
+  placeItem(index);
+  if(item[0]!=='Eraser'&&solidCategories.has(activeCategory)){
+   const placed=w.tiles[index];
+   if(placed?.item){placed.item.icon='';placed.theme=materialFor(item);save();renderTiles();}
+  }
+ },true);
+})();
+</script>
+<style id="realm-first-person-style">
+.realm-first-person-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;touch-action:none;cursor:crosshair}
+.app.immersive .realm-scene-canvas{visibility:hidden!important}
+.realm-first-person-canvas{visibility:hidden}
+.app.immersive .realm-first-person-canvas{visibility:visible}
+</style>
+<script id="realm-first-person-engine">
+/* First-person view: the camera is the player. The terrain moves past the viewpoint instead of a block/avatar sliding around the screen. */
+(()=>{
+ const root=document.getElementById('appRoot');let canvas,ctx,frame=0;
+ const getWorld=()=>typeof realmWorld==='function'?realmWorld():null;
+ function ensure(){
+  const base=document.querySelector('.realm-scene-canvas');if(!base?.parentElement)return;
+  if(!canvas){canvas=document.createElement('canvas');canvas.className='realm-first-person-canvas';canvas.setAttribute('aria-label','First-person world view');base.parentElement.insertBefore(canvas,base.nextSibling);ctx=canvas.getContext('2d');}
+  const r=base.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);if(canvas.width!==Math.round(r.width*dpr)||canvas.height!==Math.round(r.height*dpr)){canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
+ }
+ function draw(){
+  if(!root?.classList.contains('immersive'))return;ensure();if(!canvas||!ctx)return;
+  const W=canvas.clientWidth,H=canvas.clientHeight;if(W<2||H<2)return;
+  const w=getWorld();if(!w?.tiles?.length)return;
+  const cols=matchMedia('(max-width:700px)').matches?12:16,rows=Math.ceil(w.tiles.length/cols);
+  const p=Math.max(0,Math.min(w.tiles.length-1,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1))),px=p%cols,py=Math.floor(p/cols);
+  const facing=window.realmFacing||'up';const rotate=(dx,dy)=>{switch(facing){case'right':return {side:dy,forward:dx};case'down':return {side:-dx,forward:dy};case'left':return {side:-dy,forward:-dx};default:return {side:dx,forward:-dy}}};
+  const horizon=H*.39;
+  const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#72b8e8');sky.addColorStop(.52,'#d2e8ed');sky.addColorStop(.7,'#9abca0');sky.addColorStop(1,'#304d39');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+  const sun=ctx.createRadialGradient(W*.77,H*.12,2,W*.77,H*.12,Math.min(W,H)*.19);sun.addColorStop(0,'#fff8d7aa');sun.addColorStop(1,'#fff8d700');ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);
+  // Layered mountain skyline gives a stable eye-level horizon.
+  for(let layer=0;layer<3;layer++){ctx.beginPath();ctx.moveTo(0,horizon+layer*H*.045);for(let x=0;x<=W+10;x+=Math.max(22,W/18)){const peak=horizon+layer*H*.045-H*(.07+((Math.floor(x/Math.max(22,W/18))*7+layer*3)%5)*.035);ctx.lineTo(x,peak);ctx.lineTo(x+Math.max(22,W/18)*.5,horizon+layer*H*.045)}ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle=['#9eb8b1','#668b78','#3e684f'][layer];ctx.globalAlpha=[.72,.78,.9][layer];ctx.fill();}ctx.globalAlpha=1;
+  // Perspective ground plane with narrowing paths and tile seams.
+  ctx.fillStyle='#496b43';ctx.fillRect(0,horizon,W,H-horizon);
+  for(let d=14;d>=1;d--){const z=d+.6,y=horizon+(H*.63/z);const half=W*.58/z;ctx.fillStyle=d%2?'#6d8e4f':'#5c7c45';ctx.fillRect(W/2-half,y,W*1.16/z,Math.max(2,H*.11/z));ctx.strokeStyle='#d3dfa455';ctx.lineWidth=Math.max(.5,1.6/z);ctx.beginPath();ctx.moveTo(W/2-half,y);ctx.lineTo(W/2+half,y);ctx.stroke();}
+  const material={grass:['#82a957','#628442','#496833'],dirt:['#a17c53','#80603e','#60472e'],sand:['#d9c58a','#b9a16c','#8c7950'],ice:['#d8eeee','#a9c8d0','#789ba6'],water:['#56b6d2','#3385a5','#245c7c'],crystal:['#c4b8e7','#8f7dbb','#66568f'],lava:['#ec8b48','#b9502f','#6f3028'],wood:['#a87849','#805532','#593b28'],moss:['#64864b','#496a37','#334e2b'],stone:['#a3aaa6','#7a827e','#565f5b']};
+  const photoTextures=window.realmPhotoTextures||(window.realmPhotoTextures={});if(!window.realmPhotoTexturesLoaded){window.realmPhotoTexturesLoaded=true;const photoSources={grass:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=512&q=75',dirt:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=512&q=75',sand:'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=512&q=75',ice:'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=512&q=75',water:'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=512&q=75',crystal:'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=512&q=75',lava:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=512&q=75',wood:'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=512&q=75',moss:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=512&q=75',stone:'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=512&q=75'};Object.entries(photoSources).forEach(([id,url])=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>draw();img.src=url;photoTextures[id]=img;})}
+  const project=(side,forward)=>{const z=forward+1.15;return {x:W/2+side*(W*.47/z),y:horizon+(H*.43/z),z,half:W*.48/z,hh:H*.17/z}};
+  const visible=[];
+  for(let i=0;i<w.tiles.length;i++){const tx=i%cols,ty=Math.floor(i/cols),v=rotate(tx-px,ty-py);if(v.forward<.15||v.forward>14||Math.abs(v.side)>v.forward*1.2+3)continue;visible.push({i,...v});}
+  visible.sort((a,b)=>b.forward-a.forward);
+  for(const t of visible){const tile=w.tiles[t.i]||{},id=tile.theme||'grass',m=material[id]||material.grass,q=project(t.side,t.forward);if(q.x+q.half<0||q.x-q.half>W||q.y>H+80)continue;
+   const halfW=Math.min(W*.48,q.half*.72),hh=Math.max(2,q.hh*.45),groundY=q.y+hh*.62;
+   // Individual connected floor blocks, narrowing naturally with distance.
+   ctx.beginPath();ctx.moveTo(q.x,groundY-hh*.46);ctx.lineTo(q.x+halfW,groundY);ctx.lineTo(q.x,groundY+hh*.46);ctx.lineTo(q.x-halfW,groundY);ctx.closePath();ctx.save();ctx.clip();const photo=photoTextures[id];if(photo?.complete&&photo.naturalWidth){ctx.drawImage(photo,q.x-halfW,groundY-hh*.46,halfW*2,hh*.92);ctx.globalAlpha=.22;ctx.fillStyle=m[0];ctx.fillRect(q.x-halfW,groundY-hh*.46,halfW*2,hh*.92);ctx.globalAlpha=1;}else{ctx.fillStyle=m[0];ctx.fill();}ctx.restore();ctx.strokeStyle='#263d2a66';ctx.lineWidth=Math.max(.45,1.5/q.z);ctx.stroke();
+   if(t.forward<5){ctx.beginPath();ctx.moveTo(q.x-halfW,groundY);ctx.lineTo(q.x,groundY+hh*.46);ctx.lineTo(q.x,groundY+hh*.46+hh*.5);ctx.lineTo(q.x-halfW,groundY+hh*.5);ctx.closePath();ctx.fillStyle=m[1];ctx.fill();ctx.beginPath();ctx.moveTo(q.x,groundY+hh*.46);ctx.lineTo(q.x+halfW,groundY);ctx.lineTo(q.x+halfW,groundY+hh*.5);ctx.lineTo(q.x,groundY+hh*.46+hh*.5);ctx.closePath();ctx.fillStyle=m[2];ctx.fill();}
+   const placed=tile.placedBlock;if(placed){const bm=material[placed]||material.stone,bw=halfW*.72,bh=Math.max(5,hh*.82),by=groundY-hh*.48;ctx.beginPath();ctx.moveTo(q.x,by-bh*.55);ctx.lineTo(q.x+bw,by-bh*.18);ctx.lineTo(q.x,by+bh*.18);ctx.lineTo(q.x-bw,by-bh*.18);ctx.closePath();ctx.fillStyle=bm[0];ctx.fill();ctx.strokeStyle='#17251b99';ctx.lineWidth=Math.max(.6,1.3/q.z);ctx.stroke();ctx.beginPath();ctx.moveTo(q.x-bw,by-bh*.18);ctx.lineTo(q.x,by+bh*.18);ctx.lineTo(q.x,by+bh*.18+bh*.65);ctx.lineTo(q.x-bw,by-bh*.18+bh*.65);ctx.closePath();ctx.fillStyle=bm[1];ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(q.x,by+bh*.18);ctx.lineTo(q.x+bw,by-bh*.18);ctx.lineTo(q.x+bw,by-bh*.18+bh*.65);ctx.lineTo(q.x,by+bh*.18+bh*.65);ctx.closePath();ctx.fillStyle=bm[2];ctx.fill();ctx.stroke();}
+   const item=tile.item;if(item&&item.icon){const size=Math.max(10,Math.min(54,40/q.z+9));ctx.font=`${size}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='#17251b';ctx.shadowBlur=5/q.z;ctx.fillText(item.icon,q.x,groundY-hh*.2);ctx.shadowBlur=0;}
+   // Pine silhouettes and occasional animals sit on distant tiles.
+   if((t.i*17+11)%23===0&&t.forward>1){const treeH=Math.max(4,Math.min(H*.32,H*.38/q.z));ctx.fillStyle='#493d2c';ctx.fillRect(q.x-treeH*.035,groundY-treeH*.2,treeH*.07,treeH*.22);ctx.fillStyle=t.forward%2?'#244c36':'#315c3e';ctx.beginPath();ctx.moveTo(q.x,groundY-treeH);ctx.lineTo(q.x-treeH*.34,groundY-treeH*.16);ctx.lineTo(q.x+treeH*.34,groundY-treeH*.16);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(q.x,groundY-treeH*.73);ctx.lineTo(q.x-treeH*.43,groundY-treeH*.04);ctx.lineTo(q.x+treeH*.43,groundY-treeH*.04);ctx.closePath();ctx.fill();}
+   if(item?.icon&&/animal|pet|deer|fox|rabbit/i.test(item.name||'')){ctx.font=`${Math.max(12,30/q.z)}px system-ui`;ctx.fillText(item.icon,q.x,groundY-hh*.8);}
+  }
+  // A subtle first-person foreground silhouette anchors the camera without showing a third-person avatar.
+  const vignette=ctx.createRadialGradient(W/2,H*.48,Math.min(W,H)*.2,W/2,H*.48,Math.max(W,H)*.75);vignette.addColorStop(0,'#07140b00');vignette.addColorStop(1,'#07140b55');ctx.fillStyle=vignette;ctx.fillRect(0,0,W,H);
+  // Crosshair and compact view label.
+  ctx.strokeStyle='#fff9e8dd';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(W/2-8,H*.53);ctx.lineTo(W/2-3,H*.53);ctx.moveTo(W/2+3,H*.53);ctx.lineTo(W/2+8,H*.53);ctx.moveTo(W/2,H*.53-8);ctx.lineTo(W/2,H*.53-3);ctx.moveTo(W/2,H*.53+3);ctx.lineTo(W/2,H*.53+8);ctx.stroke();
+ }
+ function interact(e){
+  if(!root?.classList.contains('immersive'))return;
+  const w=getWorld();if(!w?.tiles?.length)return;
+  e.preventDefault();e.stopImmediatePropagation();
+  const rect=canvas.getBoundingClientRect(),W=rect.width,H=rect.height;
+  if(W<2||H<2)return;
+  const cols=matchMedia('(max-width:700px)').matches?12:16,rows=Math.ceil(w.tiles.length/cols);
+  const player=Math.max(0,Math.min(w.tiles.length-1,Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1)));
+  const px=player%cols,py=Math.floor(player/cols),facing=window.realmFacing||'up';
+  const rotate=(dx,dy)=>{switch(facing){case'right':return {side:dy,forward:dx};case'down':return {side:-dx,forward:dy};case'left':return {side:-dy,forward:-dx};default:return {side:dx,forward:-dy}}};
+  const horizon=H*.39;
+  const project=(side,forward)=>{const z=forward+1.15;return {x:W/2+side*(W*.47/z),y:horizon+(H*.43/z),z,half:W*.48/z,hh:H*.17/z}};
+  const clickX=e.clientX-rect.left,clickY=e.clientY-rect.top;
+  let target=-1,bestScore=Infinity;
+  for(let i=0;i<w.tiles.length;i++){
+   const tx=i%cols,ty=Math.floor(i/cols),v=rotate(tx-px,ty-py);
+   if(v.forward<.15||v.forward>14||Math.abs(v.side)>v.forward*1.2+3)continue;
+   const q=project(v.side,v.forward);
+   if(q.x+q.half<0||q.x-q.half>W||q.y>H+80)continue;
+   const halfW=Math.min(W*.48,q.half*.72),hh=Math.max(2,q.hh*.45),groundY=q.y+hh*.62;
+   const score=Math.abs(clickX-q.x)/(halfW||1)+Math.abs(clickY-groundY)/(hh*.46||1);
+   if(score<bestScore){bestScore=score;target=i;}
+  }
+  if(target<0||bestScore>2.35){if(typeof showToast==='function')showToast('Click the top of a visible ground block.');return;}
+  const tile=w.tiles[target];if(!tile)return;
+  if(Array.isArray(undoStack)){undoStack.push(JSON.stringify(w.tiles));if(undoStack.length>40)undoStack.shift();}
+  const chosen=document.querySelector('.block-theme-button.active')?.dataset.theme||window.selectedBlockTheme||'stone';
+  const blockMode=window.realmBuildMode!=='item';
+  if(e.button===2){tile.theme=chosen;tile.terrainPainted=true;tile.item=null;}
+  else if(blockMode){tile.placedBlock=chosen;tile.item=null;}
+  else if(typeof selectedItem!=='undefined'&&selectedItem){
+   const name=String(selectedItem[0]||selectedItem.name||'');
+   if(name==='Eraser'){tile.item=null;tile.placedBlock=null;}
+   else if(['Blocks','Floors','Terrain+','Wood + Build'].includes(activeCategory)){
+    const n=name.toLowerCase();
+    let material='stone';
+    if(/moss|clover|fern|meadow/.test(n))material='moss';
+    else if(/grass/.test(n))material='grass';
+    else if(/dirt|mud|clay|brick|soil/.test(n))material='dirt';
+    else if(/sand|desert|limestone/.test(n))material='sand';
+    else if(/snow|ice|frost|quartz/.test(n))material='ice';
+    else if(/water|pond|coral|prismarine/.test(n))material='water';
+    else if(/crystal|amethyst|glass|marble/.test(n))material='crystal';
+    else if(/lava|ember|basalt|obsidian/.test(n))material='lava';
+    else if(/wood|plank|log|timber|beam/.test(n))material='wood';
+    tile.placedBlock=material;tile.item=null;
+   }else{tile.item={name,icon:selectedItem[1]||'',color:selectedItem[2]||'transparent'};tile.rot=rotation;}
+  }
+  if(typeof save==='function')save();
+  if(typeof showToast==='function')showToast(e.button===2?'Terrain painted.':blockMode?chosen[0].toUpperCase()+chosen.slice(1)+' block placed!':selectedItem?.[0]==='Eraser'?'Block removed.':'Build placed.');
+  draw();
+ }
+ document.addEventListener('pointerdown',e=>{if(e.target?.closest?.('.realm-first-person-canvas'))interact(e)},true);
+ document.addEventListener('contextmenu',e=>{if(e.target?.closest?.('.realm-first-person-canvas'))e.preventDefault()},true);
+ function loop(){if(root?.classList.contains('immersive'))draw();frame=requestAnimationFrame(loop)}
+ window.addEventListener('resize',ensure);window.addEventListener('realm-world-updated',draw);if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{ensure();loop()});else{ensure();loop()}
+})();
+</script>
+<script id="realm-block-mode-and-photo-textures">
+(()=>{window.realmBuildMode='block';
+ document.addEventListener('click',e=>{
+  if(e.target.closest('.block-theme-button'))window.realmBuildMode='block';
+  else if(e.target.closest('.build-item'))window.realmBuildMode='item';
+ },true);
+ document.addEventListener('pointerdown',e=>{
+  if(e.target.closest('.block-theme-button'))window.realmBuildMode='block';
+  else if(e.target.closest('.build-item'))window.realmBuildMode='item';
+ },true);
+ const originalRenderHome=window.renderHome;
+ window.renderHome=function(){
+  if(typeof originalRenderHome==='function')originalRenderHome();
+  const btn=document.getElementById('dailyCoinButton');
+  if(btn){const d=new Date(),today=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');btn.textContent=state.lastCoinClaim===today?'✓ Daily coins collected':'🎁 Daily +75 coins';}
+ };
+ window.claimDailyCoins=function(){
+  const d=new Date(),today=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  if(state.lastCoinClaim===today){showToast('You already collected today’s bonus. Come back tomorrow!');return;}
+  state.lastCoinClaim=today;state.coins=(Number(state.coins)||0)+75;save();renderHome();showToast('75 star coins added to your wallet! ✨');
+ };
+ const originalRenderTiles=window.renderTiles;
+ window.renderTiles=function(){
+  if(typeof originalRenderTiles==='function')originalRenderTiles();
+  const w=typeof realmWorld==='function'?realmWorld():null,grid=document.getElementById('worldGrid'),root=document.getElementById('appRoot');
+  if(!w?.tiles||!grid||root?.classList.contains('immersive'))return;
+  const blocks={grass:['🟩','#72a64e'],dirt:['🟫','#9b6b45'],sand:['🟨','#d7bd77'],ice:['🧊','#9dd7e8'],water:['🟦','#348fc2'],crystal:['💎','#a98aff'],lava:['🌋','#d95b38'],wood:['🪵','#a97849'],moss:['🌿','#56835b'],stone:['🪨','#89939b']};
+  grid.querySelectorAll('.tile').forEach((el,i)=>{
+   const tile=w.tiles[i],block=tile?.placedBlock;if(!block)return;
+   const deco=el.querySelector('.deco'),style=blocks[block]||blocks.stone;
+   if(deco)deco.textContent=style[0];el.style.background=style[1];el.classList.add('placed-solid-block');el.title=(block[0].toUpperCase()+block.slice(1))+' block';
+  });
+ };
+})();</script>
+</body>
+</html>
