@@ -987,5 +987,17 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
   });
  };
 })();</script>
+<script id="realm-input-hotfix">
+(function(){
+ const root=document.getElementById('appRoot');
+ function on(){return !!(root&&root.classList.contains('immersive')||document.getElementById('build')&&document.getElementById('build').classList.contains('immersive'))}
+ function w(){return typeof realmWorld==='function'?realmWorld():null}
+ function refresh(){if(typeof positionRealmActor==='function')positionRealmActor();if(typeof save==='function')save();window.dispatchEvent(new Event('realm-world-updated'))}
+ function step(dir){const a=w();if(!a||!a.tiles)return;const d=typeof realmDimensions==='function'?realmDimensions():{cols:matchMedia('(max-width:700px)').matches?12:16};const cols=d.cols,rows=d.rows||Math.ceil(a.tiles.length/cols),p=Number.isInteger(a.playerTile)?a.playerTile:Math.min(130,a.tiles.length-1);const v={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[dir];if(!v)return;let dx=v[0],dy=v[1],f=['up','right','down','left'].indexOf(window.realmFacing||'up');for(let i=0;i<Math.max(0,f);i++){const z=dx;dx=-dy;dy=z}const x=p%cols+dx,y=Math.floor(p/cols)+dy;if(x<0||x>=cols||y<0||y>=rows)return;a.petTile=p;a.playerTile=y*cols+x;refresh()}
+ window.addEventListener('keydown',function(e){if(!on()||e.ctrlKey||e.altKey||e.metaKey)return;const k=e.key.toLowerCase(),m={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};if(m[k]){e.preventDefault();e.stopImmediatePropagation();step(m[k])}},true);
+ document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('.realm-move-pad [data-dir]');if(b&&on()){e.preventDefault();e.stopImmediatePropagation();step(b.dataset.dir)}},true);
+ document.addEventListener('pointerdown',function(e){const c=e.target.closest&&e.target.closest('.realm-first-person-canvas');if(!c||!on())return;const a=w();if(!a||!a.tiles)return;e.preventDefault();e.stopImmediatePropagation();const d=typeof realmDimensions==='function'?realmDimensions():{cols:16},cols=d.cols,p=Number.isInteger(a.playerTile)?a.playerTile:Math.min(130,a.tiles.length-1),f=['up','right','down','left'].indexOf(window.realmFacing||'up'),v=[{x:0,y:-1},{x:1,y:0},{x:0,y:1},{x:-1,y:0}][Math.max(0,f)],s=[{x:1,y:0},{x:0,y:1},{x:-1,y:0},{x:0,y:-1}][Math.max(0,f)],r=c.getBoundingClientRect(),side=Math.round(((e.clientX-r.left)/r.width-.5)*5),dist=Math.max(1,Math.min(7,Math.round((1-(e.clientY-r.top)/r.height)*7))),x=p%cols+v.x*dist+s.x*side,y=Math.floor(p/cols)+v.y*dist+s.y*side;if(x<0||x>=cols||y<0)return;const t=a.tiles[y*cols+x];if(!t)return;const b=document.querySelector('.block-theme-button.active'),mat=b&&b.dataset.theme||window.selectedBlockTheme||'stone';if(e.button===2){t.theme=mat;t.terrainPainted=true}else{t.placedBlock=mat;t.item=null}refresh();if(typeof showToast==='function')showToast(mat+' block placed!')},true);
+})();
+</script>
 </body>
 </html>
