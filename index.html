@@ -298,7 +298,7 @@ function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.
 function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
 function petCard(p){return `<button class="pet-card ${p.id===state.selectedPet?'selected':''}" onclick="choosePet('${p.id}')"><div class="pet-art" style="--petbg:${p.bg||'#e4e2ff'}">${p.art}</div><strong>${p.name}</strong><small>${p.kind} · ${BIOMES[p.biome].icon} ${BIOMES[p.biome].name}</small><span class="rarity ${p.rarity}">${p.rarity}</span></button>`}
 function renderPets(){document.getElementById('allPets').innerHTML=state.pets.length?state.pets.map(petCard).join(''):`<div class="empty"><div class="big">🥚</div><b>Your story starts with an egg!</b><p>Hatch your first pet to fill your inventory.</p><button class="btn" onclick="showPage('hatchery')">Visit the Hatchery</button></div>`}
-function renderHome(){document.getElementById('coins').textContent=state.coins;document.getElementById('level').textContent='Level '+state.level;document.getElementById('statPets').textContent=state.pets.length;document.getElementById('statWorlds').textContent=Object.keys(state.worlds).length;document.getElementById('statBlocks').textContent=Object.values(state.worlds).reduce((n,w)=>n+w.tiles.filter(t=>t.item||t.placedBlock).length,0);document.getElementById('recentPets').innerHTML=state.pets.slice(-4).reverse().map(petCard).join('');document.getElementById('heroPet').textContent=(state.pets.find(p=>p.id===state.selectedPet)||state.pets[0]||{art:'🦊'}).art}
+function renderHome(){document.getElementById('coins').textContent=state.coins;document.getElementById('level').textContent='Level '+state.level;document.getElementById('statPets').textContent=state.pets.length;document.getElementById('statWorlds').textContent=Object.keys(state.worlds).length;document.getElementById('statBlocks').textContent=Object.values(state.worlds).reduce((total,w)=>total+w.tiles.reduce((count,t)=>{const stack=Array.isArray(t.placedBlocks)?t.placedBlocks:(t.placedBlock?[t.placedBlock]:[]);return count+Math.max(stack.length,t.item?1:0)},0),0);document.getElementById('recentPets').innerHTML=state.pets.slice(-4).reverse().map(petCard).join('');document.getElementById('heroPet').textContent=(state.pets.find(p=>p.id===state.selectedPet)||state.pets[0]||{art:'🦊'}).art}
 function choosePet(id){state.selectedPet=id;save();renderPets();renderHome();renderBuilder();showToast('Selected friend! Their world is ready 🌎')}
 function selectPet(id){state.selectedPet=id;save();renderBuilder()}
 function weightedPet(){let r=Math.random()*100,rarity=r<4?'Legendary':r<18?'Epic':r<45?'Rare':'Common';let pool=PETS.filter(p=>p.rarity===rarity);if(!pool.length)pool=PETS;let base=pool[Math.floor(Math.random()*pool.length)];let names=['Twinkle','Clover','Mochi','Pebble','Daisy','Toffee','Waffles','Doodle','Misty','Sprinkles','Nibbles','Poppy','Mallow','Button','Biscuit','Tinsel','Puddle','Fig'];return {...base,id:uid(),name:names[Math.floor(Math.random()*names.length)],kind:base.kind,art:base.art,biome:base.biome,rarity:rarity,bg:base.bg}}
@@ -690,11 +690,15 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    poly([top[3],top[2],{x:top[2].x,y:top[2].y+depth},{x:top[3].x,y:top[3].y+depth}],m.left,m.edge);
    poly([top[2],top[1],{x:top[1].x,y:top[1].y+depth},{x:top[2].x,y:top[2].y+depth}],m.right,m.edge);
    poly(top,m.top,'#ffffff30');
+ }else{
+   // Fine, transparent outlines show where blocks can be placed without restoring the solid green platform.
+   ctx.save();ctx.beginPath();top.forEach((v,j)=>j?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();
+   ctx.strokeStyle='rgba(235,244,224,.22)';ctx.lineWidth=Math.max(.6,tw*.012);ctx.stroke();ctx.restore();
  }
  for(let level=0;level<Math.min(8,blockStack.length);level++){const bm=mats[blockStack[level]]||mats.stone,lift=depth*(level+1),raised=top.map(v=>({x:v.x,y:v.y-lift}));poly([raised[3],raised[2],{x:raised[2].x,y:raised[2].y+depth},{x:raised[3].x,y:raised[3].y+depth}],bm.left,bm.edge);poly([raised[2],raised[1],{x:raised[1].x,y:raised[1].y+depth},{x:raised[2].x,y:raised[2].y+depth}],bm.right,bm.edge);poly(raised,bm.top,'#ffffff44');}
  // A few surface details add texture without making the floor noisy.
  if(hasGround&&id==='grass'){ctx.save();ctx.globalAlpha=.24;ctx.strokeStyle='#d6f0a4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(c.x-tw*.12,c.y-th*.08-z);ctx.lineTo(c.x-tw*.03,c.y-th*.14-z);ctx.moveTo(c.x+tw*.12,c.y+th*.02-z);ctx.lineTo(c.x+tw*.19,c.y-th*.02-z);ctx.stroke();ctx.restore()}
- if(id==='water'){ctx.save();ctx.strokeStyle='#d7ffff88';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(c.x-tw*.16,c.y-z);ctx.lineTo(c.x+tw*.02,c.y-th*.04-z);ctx.stroke();ctx.restore()}
+ if(hasGround&&id==='water'){ctx.save();ctx.strokeStyle='#d7ffff88';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(c.x-tw*.16,c.y-z);ctx.lineTo(c.x+tw*.02,c.y-th*.04-z);ctx.stroke();ctx.restore()}
  if(data.item&&data.item.icon){ctx.save();ctx.font=`${Math.max(15,tw*.43)}px system-ui`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='#1b251b';ctx.shadowBlur=5;ctx.fillText(data.item.icon,c.x,c.y-th*.06-z-depth*.22);ctx.restore()}
  hitTiles.push({i:t.i,points:top.map(v=>({x:v.x,y:v.y})),cx:c.x,cy:c.y});
  }
@@ -830,7 +834,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    const score=Math.abs(x-cx)/(tw*.5)+Math.abs(y-(cy+depth*.24))/(th*.5+depth*.42);
    if(score<bestScore){bestScore=score;best=i}
   }
-  return bestScore<=2.15?best:null;
+  return best<0?null:best;
  }
  document.addEventListener('pointerdown',e=>{
   const canvas=e.target.closest?.('.realm-scene-canvas');
