@@ -918,7 +918,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    const score=Math.abs(clickX-q.x)/(halfW||1)+Math.abs(clickY-groundY)/(hh*.46||1);
    if(score<bestScore){bestScore=score;target=i;}
   }
-  if(target<0||bestScore>2.35){if(typeof showToast==='function')showToast('Click the top of a visible ground block.');return;}
+  if(target<0){if(typeof showToast==='function')showToast('No ground block is in view. Turn or move to explore.');return;}
   const tile=w.tiles[target];if(!tile)return;
   if(Array.isArray(undoStack)){undoStack.push(JSON.stringify(w.tiles));if(undoStack.length>40)undoStack.shift();}
   const chosen=document.querySelector('.block-theme-button.active')?.dataset.theme||window.selectedBlockTheme||'stone';
