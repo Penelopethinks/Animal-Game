@@ -660,8 +660,8 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
  // Atmospheric sky and distant layered hills.
  const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,p.sky1);sky.addColorStop(.47,p.sky2);sky.addColorStop(.73,'#d7d6bd');sky.addColorStop(1,'#253b2d');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
  if(landscapeImage?.complete&&landscapeImage.naturalWidth){const sceneH=H*.66,scale=Math.max(W/landscapeImage.naturalWidth,sceneH/landscapeImage.naturalHeight),dw=landscapeImage.naturalWidth*scale,dh=landscapeImage.naturalHeight*scale;ctx.save();ctx.globalAlpha=.56;ctx.drawImage(landscapeImage,(W-dw)/2,(sceneH-dh)*.38,dw,dh);const atmosphere=ctx.createLinearGradient(0,H*.28,0,H*.66);atmosphere.addColorStop(0,'#dbeaf022');atmosphere.addColorStop(.6,'#dce7d455');atmosphere.addColorStop(1,'#789b87aa');ctx.globalAlpha=.5;ctx.fillStyle=atmosphere;ctx.fillRect(0,H*.28,W,H*.38);ctx.restore();}
- const sun=ctx.createRadialGradient(W*.76,H*.18,3,W*.76,H*.18,Math.min(W,H)*.28);sun.addColorStop(0,'#fff4c7aa');sun.addColorStop(.25,'#fff1c344');sun.addColorStop(1,'#fff1c300');ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);
- cloud(W*.18+Math.sin(Date.now()/9000)*24,H*.18,Math.min(W,H)*.055,.74);cloud(W*.68+Math.sin(Date.now()/11000)*18,H*.27,Math.min(W,H)*.075,.58);cloud(W*.91,H*.12,Math.min(W,H)*.035,.5);
+ if(!landscapeImage?.complete||!landscapeImage.naturalWidth){const sun=ctx.createRadialGradient(W*.76,H*.18,3,W*.76,H*.18,Math.min(W,H)*.28);sun.addColorStop(0,'#fff4c7aa');sun.addColorStop(.25,'#fff1c344');sun.addColorStop(1,'#fff1c300');ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);}
+ if(!landscapeImage?.complete||!landscapeImage.naturalWidth){cloud(W*.18+Math.sin(Date.now()/9000)*24,H*.18,Math.min(W,H)*.055,.74);cloud(W*.68+Math.sin(Date.now()/11000)*18,H*.27,Math.min(W,H)*.075,.58);cloud(W*.91,H*.12,Math.min(W,H)*.035,.5);}
  // Detailed mountain range: overlapping ridgelines, rock faces, snow caps and atmospheric distance.
  const mountain=(cx,base,peakW,peakH,back,front,shade,snow)=>{
    ctx.save();ctx.globalAlpha=.92;
@@ -670,13 +670,13 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    ctx.beginPath();ctx.moveTo(cx-peakW*.43,base-peakH*.58);ctx.lineTo(cx,base-peakH);ctx.lineTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.06,base-peakH*.53);ctx.lineTo(cx-peakW*.03,base-peakH*.7);ctx.lineTo(cx-peakW*.14,base-peakH*.5);ctx.closePath();ctx.fillStyle=snow;ctx.fill();
    ctx.strokeStyle=shade;ctx.globalAlpha=.26;ctx.lineWidth=Math.max(1,peakW*.012);ctx.beginPath();ctx.moveTo(cx+peakW*.2,base-peakH*.62);ctx.lineTo(cx+peakW*.05,base-peakH*.31);ctx.lineTo(cx+peakW*.32,base-peakH*.12);ctx.moveTo(cx-peakW*.43,base-peakH*.58);ctx.lineTo(cx-peakW*.22,base-peakH*.24);ctx.stroke();ctx.restore();
  };
- const mountainBase=H*.64;
+ if(!landscapeImage?.complete||!landscapeImage.naturalWidth){const mountainBase=H*.64;
  mountain(W*.13,mountainBase,W*.22,H*.34,'#8ba9ae','#647f86','#314c55',p.far==='#a5c8d2'?'#f4ffff':'#dce6e2');
  mountain(W*.39,mountainBase+H*.025,W*.29,H*.43,'#9bb9bb','#6f8f91','#405d62',p.far==='#a5c8d2'?'#ffffff':'#e6ece6');
  mountain(W*.72,mountainBase,W*.26,H*.37,'#91aeb0','#607d82','#354f57',p.far==='#a5c8d2'?'#f7ffff':'#e2e9e5');
- mountain(W*.96,mountainBase+H*.015,W*.18,H*.29,'#a9c2bd','#7e9b91','#46625d',p.far==='#a5c8d2'?'#faffff':'#e7ece0');
+ mountain(W*.96,mountainBase+H*.015,W*.18,H*.29,'#a9c2bd','#7e9b91','#46625d',p.far==='#a5c8d2'?'#faffff':'#e7ece0');}
  // Low pine silhouettes break up the ridge line and establish scale.
- for(let i=0;i<Math.ceil(W/48);i++){const tx=i*53+((i*19)%23),ty=H*(.605+((i*7)%5)*.008),sz=Math.min(W,H)*(.018+((i*3)%4)*.003);ctx.save();ctx.globalAlpha=.42;ctx.fillStyle=i%2?'#3e6253':'#456d5a';ctx.beginPath();ctx.moveTo(tx,ty-sz*2.2);ctx.lineTo(tx-sz*.8,ty);ctx.lineTo(tx+sz*.8,ty);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(tx,ty-sz*1.5);ctx.lineTo(tx-sz,ty+sz*.65);ctx.lineTo(tx+sz,ty+sz*.65);ctx.closePath();ctx.fill();ctx.restore();}
+ if(!landscapeImage?.complete||!landscapeImage.naturalWidth){for(let i=0;i<Math.ceil(W/48);i++){const tx=i*53+((i*19)%23),ty=H*(.605+((i*7)%5)*.008),sz=Math.min(W,H)*(.018+((i*3)%4)*.003);ctx.save();ctx.globalAlpha=.42;ctx.fillStyle=i%2?'#3e6253':'#456d5a';ctx.beginPath();ctx.moveTo(tx,ty-sz*2.2);ctx.lineTo(tx-sz*.8,ty);ctx.lineTo(tx+sz*.8,ty);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(tx,ty-sz*1.5);ctx.lineTo(tx-sz,ty+sz*.65);ctx.lineTo(tx+sz,ty+sz*.65);ctx.closePath();ctx.fill();ctx.restore();}}
  const player=Number.isInteger(w.playerTile)?w.playerTile:Math.min(130,w.tiles.length-1),px=player%cols,py=Math.floor(player/cols);const flight=!!flyingMode,altitude=typeof flightAltitude!=='undefined'?flightAltitude:0;const tw=Math.max(25,Math.min(76,W/(cols+rows)*2.05)),th=tw*.51,depth=Math.max(8,tw*.2);const camX=W*.5-(px-py)*tw/2,camY=H*.58-(px+py)*th/2+(flight?Math.min(5,altitude)*12:0);const project=(x,y)=>({x:camX+(x-y)*tw/2,y:camY+(x+y)*th/2});
  // Soft fog and distant platform shadow.
  ctx.save();ctx.globalAlpha=.18;ctx.fillStyle='#10291d';ctx.beginPath();ctx.ellipse(W*.5,H*.8,W*.42,H*.14,0,0,Math.PI*2);ctx.fill();ctx.restore();hitTiles=[];
@@ -725,7 +725,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    ctx.restore();
  }
  let animalCount=0;
- for(const t of order){if(animalCount>=7)break;const dx=t.x-px,dy=t.y-py;if(Math.abs(dx)+Math.abs(dy)<3)continue;if((t.i*17+11)%19!==0)continue;const c=project(t.x,t.y),animal=wildlife[(t.i*7+3)%wildlife.length];if(c.x<-30||c.x>W+30||c.y<H*.24||c.y>H*.88)continue;drawWildlife(c,animal,Math.max(.7,Math.min(1.18,tw/48)));animalCount++;}
+ for(const t of order){if(animalCount>=7)break;const dx=t.x-px,dy=t.y-py;if(Math.abs(dx)+Math.abs(dy)<3)continue;if((t.i*17+11)%19!==0)continue;const c=project(t.x,t.y),animal=wildlife[(t.i*7+3)%wildlife.length];if(c.x<-30||c.x>W+30||c.y<H*.56||c.y>H*.88)continue;drawWildlife(c,animal,Math.max(.7,Math.min(1.18,tw/48)));animalCount++;}
  // Pet companion and explorer are drawn in the same scene, so they move with the world camera.
  function actor(tile,emoji,isPet){if(!Number.isInteger(tile))return;const x=tile%cols,y=Math.floor(tile/cols),c=project(x,y);const lift=flight&&!isPet?Math.min(5,altitude||1)*15:0;ctx.save();ctx.globalAlpha=.28;ctx.fillStyle='#14241a';ctx.beginPath();ctx.ellipse(c.x,c.y+depth+3,tw*.17,th*.12,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`${Math.max(26,tw*(isPet?.5:.58))}px system-ui`;ctx.shadowColor=isPet?'#fff0b5':'#14241c';ctx.shadowBlur=isPet?12:8;ctx.fillText(emoji,c.x,c.y-th*.3-lift);ctx.restore();}
  const pet=state?.pets?.find(q=>q.id===state.selectedPet);actor(w.petTile,pet?.art||'🐾',true);actor(player,flight?'🧙':'🧍',false);
