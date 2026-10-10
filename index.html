@@ -850,11 +850,18 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
   }
   const item=typeof selectedItem!=='undefined'?selectedItem:null;
   if(!item)return;
-  placeItem(index);
-  if(item[0]!=='Eraser'&&solidCategories.has(activeCategory)){
-   const placed=w.tiles[index];
-   if(placed?.item){placed.item.icon='';placed.theme=materialFor(item);save();renderTiles();}
+  if(item[0]==='Eraser'){placeItem(index);return}
+  if(solidCategories.has(activeCategory)){
+   const tile=w.tiles[index];
+   if(Array.isArray(undoStack)){undoStack.push(JSON.stringify(w.tiles));if(undoStack.length>40)undoStack.shift()}
+   const material=materialFor(item);
+   if(!addRealmBlock(tile,material))return;
+   tile.item=null;tile.terrainPainted=false;
+   save();renderTiles();renderHome();window.dispatchEvent(new Event('realm-world-updated'));
+   if(typeof showToast==='function')showToast(item[0]+' block placed!');
+   return;
   }
+  placeItem(index);
  },true);
 })();
 </script>
@@ -1033,6 +1040,10 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
 .app.immersive .categories .cat:nth-child(12){background:#816348;color:#fff}
 .app.immersive .categories .cat.active{outline:2px solid #fff4c4;outline-offset:1px;box-shadow:0 0 14px #fff4c455}
 .app.immersive .categories .cat:hover{filter:brightness(1.18)}
+</style>
+<style id="bottom-tray-only">
+/* The bottom catalog is the single item selector; build directly on the landscape canvas. */
+#build .block-theme-toolbar,#build .block-theme-hint{display:none!important}
 </style>
 </body>
 </html>
