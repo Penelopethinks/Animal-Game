@@ -291,7 +291,7 @@ const STORE='endlessPetUniverseSave_v1';let state={coins:250,level:1,pets:[],sel
 function safeLoad(){try{let d=JSON.parse(localStorage.getItem(STORE));if(d&&typeof d==='object')state={...state,...d}}catch(e){}if(!state.pets.length){state.pets=[{...PETS[0],id:'pet-starter',name:'Mossy'}];state.selectedPet=state.pets[0].id;state.coins=250;state.level=1;createWorld(state.pets[0]);save()}}
 function save(){try{localStorage.setItem(STORE,JSON.stringify(state))}catch(e){}}
 function uid(){return 'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
-function createWorld(pet){if(!state.worlds[pet.id]){let tiles=Array.from({length:160},(_,i)=>({item:null,rot:0}));for(let i=0;i<160;i++)if(i>111&&Math.random()<.17)tiles[i]={item:{name:'Grass block',icon:'🟩',color:BIOMES[pet.biome].ground},rot:0};state.worlds[pet.id]={tiles,name:BIOMES[pet.biome].name+' Haven'}}else if(state.worlds[pet.id].tiles.length===80){state.worlds[pet.id].tiles=Array.from({length:160},(_,i)=>state.worlds[pet.id].tiles[i]||{item:null,rot:0})}}
+function createWorld(pet){const cols=window.matchMedia('(max-width:700px)').matches?12:16,size=512,center=Math.floor(Math.ceil(size/cols)/2)*cols+Math.floor(cols/2);if(!state.worlds[pet.id]){const tiles=Array.from({length:size},()=>({item:null,rot:0}));state.worlds[pet.id]={tiles,name:BIOMES[pet.biome].name+' Haven',playerTile:center,petTile:center-1}}else{const world=state.worlds[pet.id];if(world.tiles.length<size){world.tiles=Array.from({length:size},(_,i)=>world.tiles[i]||{item:null,rot:0});if(!Number.isInteger(world.playerTile)||world.playerTile<160){world.playerTile=center;world.petTile=center-1}}}}
 function navHTML(){return NAV.map(([id,icon,label])=>`<button class="navbtn ${id==='home'?'active':''}" data-page="${id}" onclick="showPage('${id}')"><span class="navicon">${icon}</span>${label}</button>`).join('')}
 document.getElementById('sideNav').innerHTML=navHTML();document.getElementById('mobileNav').innerHTML=navHTML();
 function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.page===id));document.getElementById('appRoot').classList.toggle('immersive',id==='build');if(id==='build')renderBuilder();if(id==='pets')renderPets();if(id==='home')renderHome();window.scrollTo({top:0,behavior:'smooth'})}
@@ -504,7 +504,7 @@ voxelAdventureStyle.textContent=`
 .realm-move-pad .sprint-toggle{grid-column:1/3;grid-row:4;background:#315e45;color:#fff;border:1px solid #b7d7e455;border-radius:10px;font-size:11px;font-weight:900;touch-action:manipulation}
 .realm-move-pad .jump-button{grid-column:3;grid-row:4;background:#6659a8;color:#fff;border:1px solid #b7d7e455;border-radius:10px;font-size:11px;font-weight:900;touch-action:manipulation}
 .realm-controls-hint{font-weight:800;letter-spacing:.2px}
-.realm-controls-hint:after{content:'  ·  Q/E TURN  ·  SHIFT SPRINT';color:#ffe7a0}
+.realm-controls-hint:after{content:'  ·  Q/E TURN  ·  SHIFT SPRINT  ·  R/F FLIGHT HEIGHT';color:#ffe7a0}
 .app.immersive .pet-world-sprite{z-index:8;filter:drop-shadow(0 12px 5px #071b1caa) drop-shadow(0 0 10px #ffffff44)!important}
 .app.immersive .pet-world-sprite.pet-walking{animation:petTrailBounce .22s ease-in-out infinite alternate!important}
 @keyframes petTrailBounce{to{translate:0 -7px;rotate:3deg}}
@@ -867,8 +867,8 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
 </script>
 <style id="realm-first-person-style">
 .realm-first-person-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;touch-action:none;cursor:crosshair}
-.app.immersive .realm-scene-canvas{visibility:visible!important}
-.realm-first-person-canvas{display:none!important}
+.app.immersive .realm-scene-canvas{visibility:hidden!important}
+.app.immersive .realm-first-person-canvas{display:block!important}
 </style>
 <script id="realm-first-person-engine">
 /* First-person view: the camera is the player. The terrain moves past the viewpoint instead of a block/avatar sliding around the screen. */
@@ -896,7 +896,8 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
   // Layered mountain skyline gives a stable eye-level horizon.
   for(let layer=0;layer<3;layer++){ctx.beginPath();ctx.moveTo(0,horizon+layer*H*.045);for(let x=0;x<=W+10;x+=Math.max(22,W/18)){const peak=horizon+layer*H*.045-H*(.07+((Math.floor(x/Math.max(22,W/18))*7+layer*3)%5)*.035);ctx.lineTo(x,peak);ctx.lineTo(x+Math.max(22,W/18)*.5,horizon+layer*H*.045)}ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle=['#9eb8b1','#668b78','#3e684f'][layer];ctx.globalAlpha=[.72,.78,.9][layer];ctx.fill();}ctx.globalAlpha=1;
   // Perspective ground plane with narrowing paths and tile seams.
-  ctx.fillStyle='#496b43';ctx.fillRect(0,horizon,W,H-horizon);\n  const groundTexture=photoTextures.grass;if(groundTexture?.complete&&groundTexture.naturalWidth){const groundHeight=H-horizon,scale=Math.max(W/groundTexture.naturalWidth,groundHeight/groundTexture.naturalHeight),dw=groundTexture.naturalWidth*scale,dh=groundTexture.naturalHeight*scale;ctx.save();ctx.globalAlpha=.72;ctx.drawImage(groundTexture,(W-dw)/2,horizon+(groundHeight-dh)*.54,dw,dh);const groundShade=ctx.createLinearGradient(0,horizon,0,H);groundShade.addColorStop(0,'#6d8e4f66');groundShade.addColorStop(.55,'#426b3dcc');groundShade.addColorStop(1,'#244b34ee');ctx.globalAlpha=.68;ctx.fillStyle=groundShade;ctx.fillRect(0,horizon,W,groundHeight);ctx.restore();}
+  ctx.fillStyle='#496b43';ctx.fillRect(0,horizon,W,H-horizon);
+  const groundTexture=photoTextures.grass;if(groundTexture?.complete&&groundTexture.naturalWidth){const groundHeight=H-horizon,scale=Math.max(W/groundTexture.naturalWidth,groundHeight/groundTexture.naturalHeight),dw=groundTexture.naturalWidth*scale,dh=groundTexture.naturalHeight*scale;ctx.save();ctx.globalAlpha=.72;ctx.drawImage(groundTexture,(W-dw)/2,horizon+(groundHeight-dh)*.54,dw,dh);const groundShade=ctx.createLinearGradient(0,horizon,0,H);groundShade.addColorStop(0,'#6d8e4f66');groundShade.addColorStop(.55,'#426b3dcc');groundShade.addColorStop(1,'#244b34ee');ctx.globalAlpha=.68;ctx.fillStyle=groundShade;ctx.fillRect(0,horizon,W,groundHeight);ctx.restore();}
   for(let d=14;d>=1;d--){const z=d+.6,y=horizon+(H*.63/z);const half=W*.58/z;ctx.fillStyle=d%2?'#6d8e4f':'#5c7c45';ctx.fillRect(W/2-half,y,W*1.16/z,Math.max(2,H*.11/z));ctx.strokeStyle='#d3dfa455';ctx.lineWidth=Math.max(.5,1.6/z);ctx.beginPath();ctx.moveTo(W/2-half,y);ctx.lineTo(W/2+half,y);ctx.stroke();}
   const material={grass:['#82a957','#628442','#496833'],dirt:['#a17c53','#80603e','#60472e'],sand:['#d9c58a','#b9a16c','#8c7950'],ice:['#d8eeee','#a9c8d0','#789ba6'],water:['#56b6d2','#3385a5','#245c7c'],crystal:['#c4b8e7','#8f7dbb','#66568f'],lava:['#ec8b48','#b9502f','#6f3028'],wood:['#a87849','#805532','#593b28'],moss:['#64864b','#496a37','#334e2b'],stone:['#a3aaa6','#7a827e','#565f5b']};
   if(!window.realmPhotoTexturesLoaded){window.realmPhotoTexturesLoaded=true;const photoSources={grass:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=512&q=75',dirt:'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=512&q=75',sand:'https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=512&q=75',ice:'https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&w=512&q=75',water:'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=512&q=75',crystal:'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=512&q=75',lava:'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=512&q=75',wood:'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=512&q=75',moss:'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=512&q=75',stone:'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=512&q=75',scenery:'https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1600&q=85'};Object.entries(photoSources).forEach(([id,url])=>{const img=new Image();img.crossOrigin='anonymous';img.onload=()=>draw();img.src=url;photoTextures[id]=img;})}
@@ -943,7 +944,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    const score=Math.abs(clickX-q.x)/(halfW||1)+Math.abs(clickY-groundY)/(hh*.46||1);
    if(score<bestScore){bestScore=score;target=i;}
   }
-  if(target<0){if(typeof showToast==='function')showToast('No ground block is in view. Turn or move to explore.');return;}
+  if(target<0||bestScore>1.4){if(typeof showToast==='function')showToast('Aim at a visible ground tile to build.');return;}
   const tile=w.tiles[target];if(!tile)return;
   if(Array.isArray(undoStack)){undoStack.push(JSON.stringify(w.tiles));if(undoStack.length>40)undoStack.shift();}
   const chosen=document.querySelector('.block-theme-button.active')?.dataset.theme||window.selectedBlockTheme||'stone';
