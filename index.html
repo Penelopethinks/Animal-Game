@@ -867,7 +867,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
 </script>
 <style id="realm-first-person-style">
 .realm-first-person-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:4;touch-action:none;cursor:crosshair}
-.app.immersive .realm-scene-canvas{visibility:hidden!important}
+.app.immersive .realm-scene-canvas{visibility:visible!important}
 .app.immersive .realm-first-person-canvas{display:block!important}
 </style>
 <script id="realm-first-person-engine">
@@ -877,7 +877,7 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
  const getWorld=()=>typeof realmWorld==='function'?realmWorld():null;
  function ensure(){
   const base=document.querySelector('.realm-scene-canvas');if(!base?.parentElement)return;
-  if(!canvas){canvas=document.createElement('canvas');canvas.className='realm-first-person-canvas';canvas.setAttribute('aria-label','First-person world view');base.parentElement.insertBefore(canvas,base.nextSibling);ctx=canvas.getContext('2d');}
+  if(!canvas||!canvas.isConnected){canvas=document.createElement('canvas');canvas.className='realm-first-person-canvas';canvas.setAttribute('aria-label','First-person world view');base.parentElement.insertBefore(canvas,base.nextSibling);ctx=canvas.getContext('2d');}
   const r=base.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);if(canvas.width!==Math.round(r.width*dpr)||canvas.height!==Math.round(r.height*dpr)){canvas.width=Math.max(1,Math.round(r.width*dpr));canvas.height=Math.max(1,Math.round(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
  }
  function draw(){
