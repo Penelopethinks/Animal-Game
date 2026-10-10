@@ -660,6 +660,11 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
  // Atmospheric sky and distant layered hills.
  const sky=ctx.createLinearGradient(0,0,0,H);sky.addColorStop(0,p.sky1);sky.addColorStop(.47,p.sky2);sky.addColorStop(.73,'#d7d6bd');sky.addColorStop(1,'#253b2d');ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
  if(landscapeImage?.complete&&landscapeImage.naturalWidth){const sceneH=H,scale=Math.max(W/landscapeImage.naturalWidth,sceneH/landscapeImage.naturalHeight),dw=landscapeImage.naturalWidth*scale,dh=landscapeImage.naturalHeight*scale;ctx.save();ctx.globalAlpha=.56;ctx.drawImage(landscapeImage,(W-dw)/2,(sceneH-dh)*.38,dw,dh);const atmosphere=ctx.createLinearGradient(0,H*.28,0,H*.66);atmosphere.addColorStop(0,'#dbeaf022');atmosphere.addColorStop(.6,'#dce7d455');atmosphere.addColorStop(1,'#789b87aa');ctx.globalAlpha=.5;ctx.fillStyle=atmosphere;ctx.fillRect(0,H*.28,W,H*.38);ctx.restore();}
+ // Blend the selected biome into the foreground so the lower world reads as land, not empty transparent space.
+ const biomeFloor=ctx.createLinearGradient(0,H*.48,0,H);
+ biomeFloor.addColorStop(0,p.ground+'00');biomeFloor.addColorStop(.22,p.ground+'10');
+ biomeFloor.addColorStop(.58,p.ground+'72');biomeFloor.addColorStop(1,p.ground+'d8');
+ ctx.fillStyle=biomeFloor;ctx.fillRect(0,H*.48,W,H*.52);
  if(!landscapeImage?.complete||!landscapeImage.naturalWidth){const sun=ctx.createRadialGradient(W*.76,H*.18,3,W*.76,H*.18,Math.min(W,H)*.28);sun.addColorStop(0,'#fff4c7aa');sun.addColorStop(.25,'#fff1c344');sun.addColorStop(1,'#fff1c300');ctx.fillStyle=sun;ctx.fillRect(0,0,W,H);}
  if(!landscapeImage?.complete||!landscapeImage.naturalWidth){cloud(W*.18+Math.sin(Date.now()/9000)*24,H*.18,Math.min(W,H)*.055,.74);cloud(W*.68+Math.sin(Date.now()/11000)*18,H*.27,Math.min(W,H)*.075,.58);cloud(W*.91,H*.12,Math.min(W,H)*.035,.5);}
  // Detailed mountain range: overlapping ridgelines, rock faces, snow caps and atmospheric distance.
@@ -690,11 +695,8 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
    poly([top[3],top[2],{x:top[2].x,y:top[2].y+depth},{x:top[3].x,y:top[3].y+depth}],m.left,m.edge);
    poly([top[2],top[1],{x:top[1].x,y:top[1].y+depth},{x:top[2].x,y:top[2].y+depth}],m.right,m.edge);
    poly(top,m.top,'#ffffff30');
- }else{
-   // Fine, transparent outlines show where blocks can be placed without restoring the solid green platform.
-   ctx.save();ctx.beginPath();top.forEach((v,j)=>j?ctx.lineTo(v.x,v.y):ctx.moveTo(v.x,v.y));ctx.closePath();
-   ctx.strokeStyle='rgba(235,244,224,.22)';ctx.lineWidth=Math.max(.6,tw*.012);ctx.stroke();ctx.restore();
  }
+
  for(let level=0;level<Math.min(8,blockStack.length);level++){const bm=mats[blockStack[level]]||mats.stone,lift=depth*(level+1),raised=top.map(v=>({x:v.x,y:v.y-lift}));poly([raised[3],raised[2],{x:raised[2].x,y:raised[2].y+depth},{x:raised[3].x,y:raised[3].y+depth}],bm.left,bm.edge);poly([raised[2],raised[1],{x:raised[1].x,y:raised[1].y+depth},{x:raised[2].x,y:raised[2].y+depth}],bm.right,bm.edge);poly(raised,bm.top,'#ffffff44');}
  // A few surface details add texture without making the floor noisy.
  if(hasGround&&id==='grass'){ctx.save();ctx.globalAlpha=.24;ctx.strokeStyle='#d6f0a4';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(c.x-tw*.12,c.y-th*.08-z);ctx.lineTo(c.x-tw*.03,c.y-th*.14-z);ctx.moveTo(c.x+tw*.12,c.y+th*.02-z);ctx.lineTo(c.x+tw*.19,c.y-th*.02-z);ctx.stroke();ctx.restore()}
@@ -1044,6 +1046,9 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
 <style id="bottom-tray-only">
 /* The bottom catalog is the single item selector; build directly on the landscape canvas. */
 #build .block-theme-toolbar,#build .block-theme-hint{display:none!important}
+</style>
+<style id="biome-visible-layout">
+.app.immersive .build-panel{bottom:10px!important;max-height:148px!important;background:#15221bcc!important;backdrop-filter:blur(8px)!important}
 </style>
 </body>
 </html>
