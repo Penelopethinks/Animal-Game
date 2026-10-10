@@ -616,7 +616,7 @@ showPage=function(id){showPageForBlockThemes(id);if(id==='build'){applyBlockThem
 const positionForBlockThemes=positionRealmActor;
 positionRealmActor=function(){positionForBlockThemes();const realm=document.getElementById('build');if(realm&&realm.classList.contains('immersive'))applyBlockThemes()};
 window.addEventListener('resize',()=>{if(document.getElementById('appRoot')?.classList.contains('immersive')){applyBlockThemes();positionRealmActor()}});
-const blockThemeVisibility=document.createElement('style');blockThemeVisibility.textContent='.block-theme-toolbar,.block-theme-hint{display:none}.app.immersive .block-theme-toolbar{display:flex}.app.immersive .block-theme-hint{display:block}';document.head.appendChild(blockThemeVisibility);
+const blockThemeVisibility=document.createElement('style');blockThemeVisibility.textContent='.block-theme-toolbar,.block-theme-hint{display:none!important}';document.head.appendChild(blockThemeVisibility);
 </script>
 <style id="connected-voxel-world-upgrade">
 /* Connected voxel terrain: remove the checkerboard gaps and make every tile share an edge. */
@@ -689,8 +689,8 @@ const blockThemeVisibility=document.createElement('style');blockThemeVisibility.
  for(const t of order){const c=project(t.x,t.y),data=w.tiles[t.i]||{},id=data.theme||'grass',m=mats[id]||mats.grass;const elevated=data.item&&/block|cube|rock/i.test(data.item.name||'');const z=elevated?depth*.8:depth;const top=[{x:c.x,y:c.y-th/2-z},{x:c.x+tw/2,y:c.y-z},{x:c.x,y:c.y+th/2-z},{x:c.x-tw/2,y:c.y-z}];
  const blockStack=Array.isArray(data.placedBlocks)?data.placedBlocks:(data.placedBlock?[data.placedBlock]:[]);
  const solidLegacyItem=data.item&&/block|cube|rock/i.test(data.item.name||'');
- const hasGround=!!data.terrainPainted||blockStack.length>0||!!solidLegacyItem;
- // Keep terrain invisible until painted or built on, so the world reads as an open landscape instead of a green floating tray.
+ const hasGround=true;
+ // Render the biome floor on every tile so the natural ground is a real, continuous build surface.
  if(hasGround){
    poly([top[3],top[2],{x:top[2].x,y:top[2].y+depth},{x:top[3].x,y:top[3].y+depth}],m.left,m.edge);
    poly([top[2],top[1],{x:top[1].x,y:top[1].y+depth},{x:top[2].x,y:top[2].y+depth}],m.right,m.edge);
